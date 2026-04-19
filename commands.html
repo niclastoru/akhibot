@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands - Akhi Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0F0F0F;
+            color: #FFFFFF;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #5865F2, #1DB954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #5865F2;
+        }
+        
+        .nav-btn {
+            background: #5865F2;
+            color: white !important;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+        }
+        
+        .page-header {
+            padding: 8rem 5% 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(29,185,84,0.1) 100%);
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #5865F2, #1DB954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .commands-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-badge {
+            background: #1A1A1A;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-badge span {
+            color: #5865F2;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .content-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5% 5rem;
+        }
+        
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .category-card {
+            background: #1A1A1A;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: #5865F2;
+            box-shadow: 0 10px 30px rgba(88,101,242,0.2);
+        }
+        
+        .category-header {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .category-header .emoji {
+            font-size: 1.8rem;
+        }
+        
+        .category-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .category-header .count {
+            background: rgba(88,101,242,0.2);
+            color: #5865F2;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .command-list {
+            padding: 1rem;
+        }
+        
+        .command-item {
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .command-item:last-child {
+            border-bottom: none;
+        }
+        
+        .command-name {
+            color: #1DB954;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            min-width: 100px;
+        }
+        
+        .command-desc {
+            color: #888;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .command-aliases {
+            color: #5865F2;
+            font-size: 0.8rem;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .footer {
+            background: #0A0A0A;
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: #5865F2;
+        }
+        
+        .footer-copyright {
+            color: #888;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: #1A1A1A;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #5865F2;
+            box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
+        }
+        
+        .search-box input::placeholder {
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .commands-stats {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .command-name {
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🤖 Akhi Bot</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="commands.html">Commands</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>All Commands</h1>
+        <p>Everything you need to manage your server</p>
+        <div class="commands-stats">
+            <div class="stat-badge"><span>180+</span> Commands</div>
+            <div class="stat-badge"><span>17</span> Categories</div>
+            <div class="stat-badge"><span>24/7</span> Online</div>
+        </div>
+    </div>
+
+    <section class="content-section">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search commands..." onkeyup="filterCommands()">
+        </div>
+        
+        <div class="commands-grid" id="commandsGrid">
+            
+            <!-- Moderation -->
+            <div class="category-card" data-category="moderation">
+                <div class="category-header">
+                    <span class="emoji">🛡️</span>
+                    <h3>Moderation</h3>
+                    <span class="count">24</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">ban</span><span class="command-desc">Ban a user permanently</span></div>
+                    <div class="command-item"><span class="command-name">unban</span><span class="command-desc">Unban a user</span></div>
+                    <div class="command-item"><span class="command-name">kick</span><span class="command-desc">Kick a user from the server</span></div>
+                    <div class="command-item"><span class="command-name">timeout</span><span class="command-aliases">mute</span><span class="command-desc">Timeout a user</span></div>
+                    <div class="command-item"><span class="command-name">untimeout</span><span class="command-aliases">unmute</span><span class="command-desc">Remove timeout</span></div>
+                    <div class="command-item"><span class="command-name">warn</span><span class="command-desc">Warn a user</span></div>
+                    <div class="command-item"><span class="command-name">warnings</span><span class="command-desc">Show user warnings</span></div>
+                    <div class="command-item"><span class="command-name">clearwarns</span><span class="command-desc">Clear user warnings</span></div>
+                    <div class="command-item"><span class="command-name">purge</span><span class="command-aliases">clear</span><span class="command-desc">Delete messages</span></div>
+                    <div class="command-item"><span class="command-name">lock</span><span class="command-desc">Lock a channel</span></div>
+                    <div class="command-item"><span class="command-name">unlock</span><span class="command-desc">Unlock a channel</span></div>
+                    <div class="command-item"><span class="command-name">slowmode</span><span class="command-desc">Set slowmode</span></div>
+                    <div class="command-item"><span class="command-name">role</span><span class="command-aliases">r</span><span class="command-desc">Add/remove role (auto-detect)</span></div>
+                    <div class="command-item"><span class="command-name">roles</span><span class="command-desc">Show user roles</span></div>
+                    <div class="command-item"><span class="command-name">nickname</span><span class="command-aliases">nick</span><span class="command-desc">Change nickname</span></div>
+                    <div class="command-item"><span class="command-name">clearnick</span><span class="command-desc">Remove nickname</span></div>
+                    <div class="command-item"><span class="command-name">jail</span><span class="command-desc">Jail a user</span></div>
+                    <div class="command-item"><span class="command-name">unjail</span><span class="command-desc">Release from jail</span></div>
+                    <div class="command-item"><span class="command-name">jail-list</span><span class="command-desc">Show jailed users</span></div>
+                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-desc">Configure jail</span></div>
+                    <div class="command-item"><span class="command-name">drag</span><span class="command-desc">Drag user to your VC</span></div>
+                    <div class="command-item"><span class="command-name">moveall</span><span class="command-desc">Move all users to your VC</span></div>
+                    <div class="command-item"><span class="command-name">history</span><span class="command-desc">Show warning history</span></div>
+                    <div class="command-item"><span class="command-name">wordfilter</span><span class="command-desc">Manage word filter</span></div>
+                </div>
+            </div>
+            
+            <!-- Utility -->
+            <div class="category-card" data-category="utility">
+                <div class="category-header">
+                    <span class="emoji">🔧</span>
+                    <h3>Utility</h3>
+                    <span class="count">24</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">useravatar</span><span class="command-aliases">av</span><span class="command-desc">Show user avatar</span></div>
+                    <div class="command-item"><span class="command-name">userinfo</span><span class="command-aliases">ui</span><span class="command-desc">Show user information</span></div>
+                    <div class="command-item"><span class="command-name">serverinfo</span><span class="command-aliases">si</span><span class="command-desc">Show server information</span></div>
+                    <div class="command-item"><span class="command-name">membercount</span><span class="command-aliases">mc</span><span class="command-desc">Show member count</span></div>
+                    <div class="command-item"><span class="command-name">snipe</span><span class="command-aliases">s</span><span class="command-desc">Show last deleted message</span></div>
+                    <div class="command-item"><span class="command-name">clearsnipe</span><span class="command-aliases">cs</span><span class="command-desc">Clear snipe cache</span></div>
+                    <div class="command-item"><span class="command-name">remind</span><span class="command-aliases">reminder</span><span class="command-desc">Set a reminder</span></div>
+                    <div class="command-item"><span class="command-name">afk</span><span class="command-aliases">away</span><span class="command-desc">Set AFK status</span></div>
+                    <div class="command-item"><span class="command-name">base64</span><span class="command-aliases">b64</span><span class="command-desc">Encode/decode Base64</span></div>
+                    <div class="command-item"><span class="command-name">boosters</span><span class="command-desc">Show server boosters</span></div>
+                    <div class="command-item"><span class="command-name">guildbanner</span><span class="command-desc">Show server banner</span></div>
+                    <div class="command-item"><span class="command-name">guildicon</span><span class="command-desc">Show server icon</span></div>
+                    <div class="command-item"><span class="command-name">guildsplash</span><span class="command-desc">Show server splash</span></div>
+                    <div class="command-item"><span class="command-name">banner</span><span class="command-aliases">ubanner</span><span class="command-desc">Show user banner</span></div>
+                    <div class="command-item"><span class="command-name">stealemoji</span><span class="command-aliases">steal</span><span class="command-desc">Steal an emoji</span></div>
+                    <div class="command-item"><span class="command-name">vc</span><span class="command-aliases">voice</span><span class="command-desc">Show voice channel info</span></div>
+                    <div class="command-item"><span class="command-name">color</span><span class="command-aliases">hex</span><span class="command-desc">Show color information</span></div>
+                    <div class="command-item"><span class="command-name">randomhex</span><span class="command-aliases">rhex</span><span class="command-desc">Generate random color</span></div>
+                    <div class="command-item"><span class="command-name">choose</span><span class="command-aliases">pick</span><span class="command-desc">Choose from options</span></div>
+                    <div class="command-item"><span class="command-name">dump</span><span class="command-desc">Export channel messages</span></div>
+                    <div class="command-item"><span class="command-name">screenshot</span><span class="command-aliases">ss</span><span class="command-desc">Take website screenshot</span></div>
+                    <div class="command-item"><span class="command-name">chat</span><span class="command-aliases">talk</span><span class="command-desc">Chat with the bot</span></div>
+                    <div class="command-item"><span class="command-name">chatgpt</span><span class="command-aliases">gpt</span><span class="command-desc">Ask ChatGPT (simulation)</span></div>
+                    <div class="command-item"><span class="command-name">reminders</span><span class="command-desc">Show active reminders</span></div>
+                </div>
+            </div>
+            
+            <!-- Fun -->
+            <div class="category-card" data-category="fun">
+                <div class="category-header">
+                    <span class="emoji">🎮</span>
+                    <h3>Fun</h3>
+                    <span class="count">21</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">hug</span><span class="command-desc">Hug someone</span></div>
+                    <div class="command-item"><span class="command-name">kiss</span><span class="command-desc">Kiss someone</span></div>
+                    <div class="command-item"><span class="command-name">slap</span><span class="command-desc">Slap someone</span></div>
+                    <div class="command-item"><span class="command-name">cuddle</span><span class="command-desc">Cuddle with someone</span></div>
+                    <div class="command-item"><span class="command-name">pat</span><span class="command-desc">Pat someone</span></div>
+                    <div class="command-item"><span class="command-name">poke</span><span class="command-desc">Poke someone</span></div>
+                    <div class="command-item"><span class="command-name">wink</span><span class="command-desc">Wink at someone</span></div>
+                    <div class="command-item"><span class="command-name">highfive</span><span class="command-aliases">hf</span><span class="command-desc">High-five someone</span></div>
+                    <div class="command-item"><span class="command-name">handhold</span><span class="command-desc">Hold hands with someone</span></div>
+                    <div class="command-item"><span class="command-name">marry</span><span class="command-desc">Propose to someone</span></div>
+                    <div class="command-item"><span class="command-name">divorce</span><span class="command-desc">Divorce your partner</span></div>
+                    <div class="command-item"><span class="command-name">marrystatus</span><span class="command-desc">Check relationship status</span></div>
+                    <div class="command-item"><span class="command-name">ship</span><span class="command-desc">Ship two users</span></div>
+                    <div class="command-item"><span class="command-name">pp</span><span class="command-desc">Measure PP size</span></div>
+                    <div class="command-item"><span class="command-name">bodycount</span><span class="command-aliases">bc</span><span class="command-desc">Show your bodycount</span></div>
+                    <div class="command-item"><span class="command-name">cheat</span><span class="command-desc">Cheat on someone</span></div>
+                    <div class="command-item"><span class="command-name">blowjob</span><span class="command-aliases">bj</span><span class="command-desc">Give a blowjob</span></div>
+                    <div class="command-item"><span class="command-name">lick</span><span class="command-desc">Lick someone</span></div>
+                    <div class="command-item"><span class="command-name">cry</span><span class="command-desc">Cry</span></div>
+                    <div class="command-item"><span class="command-name">fortune</span><span class="command-aliases">cookie</span><span class="command-desc">Open a fortune cookie</span></div>
+                    <div class="command-item"><span class="command-name">wouldyourather</span><span class="command-aliases">wyr</span><span class="command-desc">Would You Rather question</span></div>
+                </div>
+            </div>
+            
+            <!-- Music -->
+            <div class="category-card" data-category="music">
+                <div class="category-header">
+                    <span class="emoji">🎵</span>
+                    <h3>Music</h3>
+                    <span class="count">18</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">play</span><span class="command-aliases">p</span><span class="command-desc">Play a song (Spotify/YouTube/SoundCloud)</span></div>
+                    <div class="command-item"><span class="command-name">spotify</span><span class="command-aliases">sp</span><span class="command-desc">Play Spotify tracks/playlists</span></div>
+                    <div class="command-item"><span class="command-name">skip</span><span class="command-aliases">s</span><span class="command-desc">Skip current song</span></div>
+                    <div class="command-item"><span class="command-name">stop</span><span class="command-aliases">leave</span><span class="command-desc">Stop music and leave VC</span></div>
+                    <div class="command-item"><span class="command-name">pause</span><span class="command-desc">Pause music</span></div>
+                    <div class="command-item"><span class="command-name">resume</span><span class="command-desc">Resume music</span></div>
+                    <div class="command-item"><span class="command-name">volume</span><span class="command-aliases">v</span><span class="command-desc">Change volume</span></div>
+                    <div class="command-item"><span class="command-name">queue</span><span class="command-aliases">q</span><span class="command-desc">Show music queue</span></div>
+                    <div class="command-item"><span class="command-name">nowplaying</span><span class="command-aliases">np</span><span class="command-desc">Show current song</span></div>
+                    <div class="command-item"><span class="command-name">loop</span><span class="command-aliases">l</span><span class="command-desc">Toggle loop</span></div>
+                    <div class="command-item"><span class="command-name">shuffle</span><span class="command-aliases">mix</span><span class="command-desc">Shuffle queue</span></div>
+                    <div class="command-item"><span class="command-name">remove</span><span class="command-aliases">rm</span><span class="command-desc">Remove song from queue</span></div>
+                    <div class="command-item"><span class="command-name">clear</span><span class="command-aliases">cq</span><span class="command-desc">Clear queue</span></div>
+                    <div class="command-item"><span class="command-name">lyrics</span><span class="command-aliases">ly</span><span class="command-desc">Search lyrics</span></div>
+                    <div class="command-item"><span class="command-name">playlist</span><span class="command-aliases">pl</span><span class="command-desc">Save/load playlists</span></div>
+                    <div class="command-item"><span class="command-name">musichelp</span><span class="command-aliases">music</span><span class="command-desc">Show music commands</span></div>
+                    <div class="command-item"><span class="command-name">bassboost</span><span class="command-desc">Toggle bass boost</span></div>
+                    <div class="command-item"><span class="command-name">seek</span><span class="command-desc">Seek to position</span></div>
+                </div>
+            </div>
+            
+            <!-- Economy -->
+            <div class="category-card" data-category="economy">
+                <div class="category-header">
+                    <span class="emoji">💰</span>
+                    <h3>Economy</h3>
+                    <span class="count">12</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">daily</span><span class="command-desc">Claim daily reward</span></div>
+                    <div class="command-item"><span class="command-name">work</span><span class="command-desc">Work for money</span></div>
+                    <div class="command-item"><span class="command-name">balance</span><span class="command-aliases">bal</span><span class="command-desc">Check balance</span></div>
+                    <div class="command-item"><span class="command-name">pay</span><span class="command-desc">Send money to user</span></div>
+                    <div class="command-item"><span class="command-name">deposit</span><span class="command-aliases">dep</span><span class="command-desc">Deposit to bank</span></div>
+                    <div class="command-item"><span class="command-name">withdraw</span><span class="command-aliases">with</span><span class="command-desc">Withdraw from bank</span></div>
+                    <div class="command-item"><span class="command-name">rob</span><span class="command-desc">Rob a user</span></div>
+                    <div class="command-item"><span class="command-name">leaderboard</span><span class="command-aliases">lb</span><span class="command-desc">Show richest users</span></div>
+                    <div class="command-item"><span class="command-name">shop</span><span class="command-desc">View shop</span></div>
+                    <div class="command-item"><span class="command-name">buy</span><span class="command-desc">Buy an item</span></div>
+                    <div class="command-item"><span class="command-name">inventory</span><span class="command-aliases">inv</span><span class="command-desc">View inventory</span></div>
+                    <div class="command-item"><span class="command-name">use</span><span class="command-desc">Use an item</span></div>
+                </div>
+            </div>
+            
+            <!-- Leveling -->
+            <div class="category-card" data-category="leveling">
+                <div class="category-header">
+                    <span class="emoji">📊</span>
+                    <h3>Leveling</h3>
+                    <span class="count">19</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">rank</span><span class="command-aliases">level</span><span class="command-desc">Show your rank</span></div>
+                    <div class="command-item"><span class="command-name">leaderboard</span><span class="command-aliases">lb</span><span class="command-desc">Show level leaderboard</span></div>
+                    <div class="command-item"><span class="command-name">levels</span><span class="command-aliases">lvl</span><span class="command-desc">Leveling overview</span></div>
+                    <div class="command-item"><span class="command-name">levels-add</span><span class="command-desc">Add level role</span></div>
+                    <div class="command-item"><span class="command-name">levels-remove</span><span class="command-desc">Remove level role</span></div>
+                    <div class="command-item"><span class="command-name">levels-roles</span><span class="command-desc">Show level roles</span></div>
+                    <div class="command-item"><span class="command-name">levels-setrate</span><span class="command-desc">Set XP rate</span></div>
+                    <div class="command-item"><span class="command-name">levels-ignore</span><span class="command-desc">Ignore channel/role</span></div>
+                    <div class="command-item"><span class="command-name">levels-lock</span><span class="command-desc">Lock level notifications</span></div>
+                    <div class="command-item"><span class="command-name">levels-unlock</span><span class="command-desc">Set level channel</span></div>
+                    <div class="command-item"><span class="command-name">setxp</span><span class="command-aliases">addxp</span><span class="command-desc">Add XP to user</span></div>
+                    <div class="command-item"><span class="command-name">removexp</span><span class="command-aliases">takexp</span><span class="command-desc">Remove XP from user</span></div>
+                    <div class="command-item"><span class="command-name">setlevel</span><span class="command-aliases">setlvl</span><span class="command-desc">Set user level</span></div>
+                    <div class="command-item"><span class="command-name">levels-reset</span><span class="command-desc">Reset user level</span></div>
+                    <div class="command-item"><span class="command-name">levels-cleanup</span><span class="command-desc">Clean up abandoned users</span></div>
+                    <div class="command-item"><span class="command-name">levels-sync</span><span class="command-desc">Synchronize level roles</span></div>
+                    <div class="command-item"><span class="command-name">levels-update</span><span class="command-desc">Update level roles</span></div>
+                    <div class="command-item"><span class="command-name">levels-messageMode</span><span class="command-desc">Set message mode</span></div>
+                    <div class="command-item"><span class="command-name">levels-stackroles</span><span class="command-desc">Toggle stack roles</span></div>
+                </div>
+            </div>
+            
+            <!-- Admin -->
+            <div class="category-card" data-category="admin">
+                <div class="category-header">
+                    <span class="emoji">⚙️</span>
+                    <h3>Admin</h3>
+                    <span class="count">27</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">settings</span><span class="command-aliases">config</span><span class="command-desc">Bot settings</span></div>
+                    <div class="command-item"><span class="command-name">prefix</span><span class="command-aliases">setprefix</span><span class="command-desc">Change bot prefix</span></div>
+                    <div class="command-item"><span class="command-name">language</span><span class="command-aliases">lang</span><span class="command-desc">Change bot language</span></div>
+                    <div class="command-item"><span class="command-name">antinuke</span><span class="command-aliases">an</span><span class="command-desc">Anti-nuke settings</span></div>
+                    <div class="command-item"><span class="command-name">antiraid</span><span class="command-aliases">ar</span><span class="command-desc">Anti-raid settings</span></div>
+                    <div class="command-item"><span class="command-name">autoresponder</span><span class="command-aliases">arsp</span><span class="command-desc">Manage auto-responder</span></div>
+                    <div class="command-item"><span class="command-name">announce</span><span class="command-aliases">say</span><span class="command-desc">Send announcement</span></div>
+                    <div class="command-item"><span class="command-name">nuke</span><span class="command-desc">Nuke a channel</span></div>
+                    <div class="command-item"><span class="command-name">reactionroles</span><span class="command-aliases">rr</span><span class="command-desc">Manage reaction roles</span></div>
+                    <div class="command-item"><span class="command-name">serverrules</span><span class="command-aliases">rules</span><span class="command-desc">Set server rules</span></div>
+                    <div class="command-item"><span class="command-name">status</span><span class="command-aliases">setstatus</span><span class="command-desc">Change bot status</span></div>
+                    <div class="command-item"><span class="command-name">stickymessage</span><span class="command-aliases">sticky</span><span class="command-desc">Set sticky message</span></div>
+                    <div class="command-item"><span class="command-name">stripstaff</span><span class="command-aliases">removestaff</span><span class="command-desc">Remove staff roles</span></div>
+                    <div class="command-item"><span class="command-name">unbanall</span><span class="command-desc">Unban all users</span></div>
+                    <div class="command-item"><span class="command-name">unjailall</span><span class="command-desc">Release all from jail</span></div>
+                    <div class="command-item"><span class="command-name">vanity-url</span><span class="command-aliases">vanity</span><span class="command-desc">Show vanity URL</span></div>
+                    <div class="command-item"><span class="command-name">activity</span><span class="command-aliases">act</span><span class="command-desc">Start VC activity</span></div>
+                    <div class="command-item"><span class="command-name">customize</span><span class="command-aliases">custom</span><span class="command-desc">Bot customization</span></div>
+                    <div class="command-item"><span class="command-name">disablecommand</span><span class="command-aliases">disable</span><span class="command-desc">Disable a command</span></div>
+                    <div class="command-item"><span class="command-name">enablecommand</span><span class="command-aliases">enable</span><span class="command-desc">Enable a command</span></div>
+                    <div class="command-item"><span class="command-name">dmall</span><span class="command-aliases">massdm</span><span class="command-desc">DM all members (warning)</span></div>
+                    <div class="command-item"><span class="command-name">fakepermissions</span><span class="command-aliases">fakeperm</span><span class="command-desc">Show fake permissions</span></div>
+                    <div class="command-item"><span class="command-name">listpermissions</span><span class="command-aliases">listperm</span><span class="command-desc">List all permissions</span></div>
+                    <div class="command-item"><span class="command-name">reaction-setup</span><span class="command-aliases">reactsetup</span><span class="command-desc">Reaction role setup</span></div>
+                    <div class="command-item"><span class="command-name">verwarnung</span><span class="command-aliases">remind</span><span class="command-desc">Set reminder (admin)</span></div>
+                    <div class="command-item"><span class="command-name">settingsstaff</span><span class="command-aliases">sstaff</span><span class="command-desc">Manage staff roles</span></div>
+                    <div class="command-item"><span class="command-name">teamhierarchy</span><span class="command-aliases">th</span><span class="command-desc">Configure team hierarchy</span></div>
+                </div>
+            </div>
+            
+            <!-- Server -->
+            <div class="category-card" data-category="server">
+                <div class="category-header">
+                    <span class="emoji">🌐</span>
+                    <h3>Server</h3>
+                    <span class="count">12</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">autorole</span><span class="command-desc">Set auto-role for new members</span></div>
+                    <div class="command-item"><span class="command-name">welcome-add</span><span class="command-desc">Add welcome message</span></div>
+                    <div class="command-item"><span class="command-name">welcome-remove</span><span class="command-desc">Remove welcome message</span></div>
+                    <div class="command-item"><span class="command-name">welcome-list</span><span class="command-desc">List welcome messages</span></div>
+                    <div class="command-item"><span class="command-name">welcome-view</span><span class="command-desc">View welcome message</span></div>
+                    <div class="command-item"><span class="command-name">welcome</span><span class="command-desc">Welcome test/info</span></div>
+                    <div class="command-item"><span class="command-name">ticketpanel</span><span class="command-desc">Create ticket panel</span></div>
+                    <div class="command-item"><span class="command-name">vanity-role</span><span class="command-aliases">vrole</span><span class="command-desc">Set vanity role</span></div>
+                    <div class="command-item"><span class="command-name">guildwhitelist</span><span class="command-desc">Manage server whitelist</span></div>
+                    <div class="command-item"><span class="command-name">prefix-view</span><span class="command-desc">Show current prefix</span></div>
+                    <div class="command-item"><span class="command-name">prefix-remove</span><span class="command-desc">Reset prefix to default</span></div>
+                    <div class="command-item"><span class="command-name">sav</span><span class="command-aliases">serverav</span><span class="command-desc">Show server avatar</span></div>
+                </div>
+            </div>
+            
+            <!-- Team -->
+            <div class="category-card" data-category="team">
+                <div class="category-header">
+                    <span class="emoji">👥</span>
+                    <h3>Team</h3>
+                    <span class="count">8</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">team</span><span class="command-aliases">ti</span><span class="command-desc">Show team info</span></div>
+                    <div class="command-item"><span class="command-name">uprank</span><span class="command-aliases">promote</span><span class="command-desc">Promote a user</span></div>
+                    <div class="command-item"><span class="command-name">derank</span><span class="command-aliases">demote</span><span class="command-desc">Demote a user</span></div>
+                    <div class="command-item"><span class="command-name">uprankinfo</span><span class="command-aliases">upi</span><span class="command-desc">Show promotion history</span></div>
+                    <div class="command-item"><span class="command-name">derankinfo</span><span class="command-aliases">di</span><span class="command-desc">Show demotion history</span></div>
+                    <div class="command-item"><span class="command-name">teamlog</span><span class="command-aliases">tlog</span><span class="command-desc">Set team log channel</span></div>
+                    <div class="command-item"><span class="command-name">teamlogdisable</span><span class="command-aliases">tlogoff</span><span class="command-desc">Disable team logs</span></div>
+                    <div class="command-item"><span class="command-name">teamlogstatus</span><span class="command-aliases">tlogstatus</span><span class="command-desc">Show log settings</span></div>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="category-card" data-category="stats">
+                <div class="category-header">
+                    <span class="emoji">📈</span>
+                    <h3>Statistics</h3>
+                    <span class="count">3</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">stats</span><span class="command-desc">Show user/server statistics</span></div>
+                    <div class="command-item"><span class="command-name">rank</span><span class="command-desc">Show user ranking</span></div>
+                    <div class="command-item"><span class="command-name">top</span><span class="command-desc">Show top users</span></div>
+                </div>
+            </div>
+            
+            <!-- Giveaway -->
+            <div class="category-card" data-category="giveaway">
+                <div class="category-header">
+                    <span class="emoji">🎁</span>
+                    <h3>Giveaway</h3>
+                    <span class="count">5</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">gstart</span><span class="command-aliases">giveaway</span><span class="command-desc">Start a giveaway</span></div>
+                    <div class="command-item"><span class="command-name">gend</span><span class="command-aliases">gstop</span><span class="command-desc">End a giveaway early</span></div>
+                    <div class="command-item"><span class="command-name">greroll</span><span class="command-aliases">reroll</span><span class="command-desc">Reroll winners</span></div>
+                    <div class="command-item"><span class="command-name">glist</span><span class="command-aliases">giveaways</span><span class="command-desc">List active giveaways</span></div>
+                    <div class="command-item"><span class="command-name">getid</span><span class="command-aliases">id</span><span class="command-desc">Show your Discord ID</span></div>
+                </div>
+            </div>
+            
+            <!-- VoiceMaster -->
+            <div class="category-card" data-category="voicemaster">
+                <div class="category-header">
+                    <span class="emoji">🎤</span>
+                    <h3>VoiceMaster</h3>
+                    <span class="count">15</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">setupvm</span><span class="command-aliases">voicemaster</span><span class="command-desc">Setup VoiceMaster</span></div>
+                    <div class="command-item"><span class="command-name">voicemaster-reset</span><span class="command-aliases">vm-reset</span><span class="command-desc">Reset VoiceMaster</span></div>
+                    <div class="command-item"><span class="command-name">voice-lock</span><span class="command-aliases">vlock</span><span class="command-desc">Lock your voice channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-unlock</span><span class="command-aliases">vunlock</span><span class="command-desc">Unlock your voice channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-hide</span><span class="command-aliases">vhide</span><span class="command-desc">Hide your voice channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-unhide</span><span class="command-aliases">vunhide</span><span class="command-desc">Reveal your voice channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-claim</span><span class="command-aliases">vclaim</span><span class="command-desc">Claim a voice channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-transfer</span><span class="command-aliases">vtransfer</span><span class="command-desc">Transfer channel ownership</span></div>
+                    <div class="command-item"><span class="command-name">voice-limit</span><span class="command-aliases">vlimit</span><span class="command-desc">Set user limit</span></div>
+                    <div class="command-item"><span class="command-name">voice-rename</span><span class="command-aliases">vrename</span><span class="command-desc">Rename channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-ban</span><span class="command-aliases">vban</span><span class="command-desc">Ban user from channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-unban</span><span class="command-aliases">vunban</span><span class="command-desc">Unban user from channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-kick</span><span class="command-desc">Kick user from channel</span></div>
+                    <div class="command-item"><span class="command-name">voice-activity</span><span class="command-desc">Start VC activity</span></div>
+                    <div class="command-item"><span class="command-name">voice-info</span><span class="command-desc">Show channel info</span></div>
+                </div>
+            </div>
+            
+            <!-- Logs -->
+            <div class="category-card" data-category="logs">
+                <div class="category-header">
+                    <span class="emoji">📋</span>
+                    <h3>Logs</h3>
+                    <span class="count">3</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">logs</span><span class="command-aliases">log</span><span class="command-desc">Show/set log channels</span></div>
+                    <div class="command-item"><span class="command-name">logs-disable</span><span class="command-aliases">logsoff</span><span class="command-desc">Disable logging</span></div>
+                    <div class="command-item"><span class="command-name">logs-reset</span><span class="command-aliases">logreset</span><span class="command-desc">Reset all log settings</span></div>
+                </div>
+            </div>
+            
+            <!-- Booster -->
+            <div class="category-card" data-category="booster">
+                <div class="category-header">
+                    <span class="emoji">🚀</span>
+                    <h3>Booster</h3>
+                    <span class="count">13</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">br</span><span class="command-aliases">boosterrole</span><span class="command-desc">Booster role overview</span></div>
+                    <div class="command-item"><span class="command-name">br-create</span><span class="command-aliases">br-make</span><span class="command-desc">Create booster role</span></div>
+                    <div class="command-item"><span class="command-name">br-color</span><span class="command-aliases">br-setcolor</span><span class="command-desc">Change role color</span></div>
+                    <div class="command-item"><span class="command-name">br-icon</span><span class="command-aliases">br-seticon</span><span class="command-desc">Set role icon</span></div>
+                    <div class="command-item"><span class="command-name">br-rename</span><span class="command-aliases">br-name</span><span class="command-desc">Rename role</span></div>
+                    <div class="command-item"><span class="command-name">br-share</span><span class="command-aliases">br-give</span><span class="command-desc">Share role</span></div>
+                    <div class="command-item"><span class="command-name">br-unshare</span><span class="command-desc">Remove share</span></div>
+                    <div class="command-item"><span class="command-name">br-shares</span><span class="command-aliases">br-shared</span><span class="command-desc">Show shared users</span></div>
+                    <div class="command-item"><span class="command-name">br-leave</span><span class="command-aliases">br-delete</span><span class="command-desc">Delete your role</span></div>
+                    <div class="command-item"><span class="command-name">br-remove</span><span class="command-desc">Delete user's role (admin)</span></div>
+                    <div class="command-item"><span class="command-name">br-base</span><span class="command-aliases">br-setbase</span><span class="command-desc">Set base role</span></div>
+                    <div class="command-item"><span class="command-name">br-disable</span><span class="command-aliases">br-off</span><span class="command-desc">Disable booster roles</span></div>
+                    <div class="command-item"><span class="command-name">booster-status</span><span class="command-desc">Show booster status</span></div>
+                </div>
+            </div>
+            
+            <!-- Games -->
+            <div class="category-card" data-category="games">
+                <div class="category-header">
+                    <span class="emoji">🎲</span>
+                    <h3>Games</h3>
+                    <span class="count">8</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">tictactoe</span><span class="command-aliases">ttt</span><span class="command-desc">Play TicTacToe</span></div>
+                    <div class="command-item"><span class="command-name">roulette</span><span class="command-aliases">roul</span><span class="command-desc">Play Roulette</span></div>
+                    <div class="command-item"><span class="command-name">slots</span><span class="command-aliases">slot</span><span class="command-desc">Play Slots</span></div>
+                    <div class="command-item"><span class="command-name">coinflip</span><span class="command-aliases">cf</span><span class="command-desc">Coin flip against users</span></div>
+                    <div class="command-item"><span class="command-name">blackjack</span><span class="command-aliases">bj</span><span class="command-desc">Play Blackjack</span></div>
+                    <div class="command-item"><span class="command-name">roll</span><span class="command-desc">Roll a dice</span></div>
+                    <div class="command-item"><span class="command-name">8ball</span><span class="command-desc">Ask the magic 8-ball</span></div>
+                    <div class="command-item"><span class="command-name">rps</span><span class="command-aliases">rockpaperscissors</span><span class="command-desc">Rock Paper Scissors</span></div>
+                </div>
+            </div>
+            
+            <!-- Miscellaneous -->
+            <div class="category-card" data-category="miscellaneous">
+                <div class="category-header">
+                    <span class="emoji">📦</span>
+                    <h3>Misc</h3>
+                    <span class="count">5</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">help</span><span class="command-desc">Show help menu</span></div>
+                    <div class="command-item"><span class="command-name">ping</span><span class="command-desc">Show bot latency</span></div>
+                    <div class="command-item"><span class="command-name">invite</span><span class="command-desc">Get bot invite link</span></div>
+                    <div class="command-item"><span class="command-name">support</span><span class="command-desc">Get support server link</span></div>
+                    <div class="command-item"><span class="command-name">vote</span><span class="command-desc">Vote for the bot</span></div>
+                </div>
+            </div>
+            
+            <!-- Settings -->
+            <div class="category-card" data-category="settings">
+                <div class="category-header">
+                    <span class="emoji">⚙️</span>
+                    <h3>Settings</h3>
+                    <span class="count">7</span>
+                </div>
+                <div class="command-list">
+                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-aliases">jailconfig</span><span class="command-desc">Configure jail system</span></div>
+                    <div class="command-item"><span class="command-name">settings-jailmsg</span><span class="command-aliases">jailmsg</span><span class="command-desc">Set jail message</span></div>
+                    <div class="command-item"><span class="command-name">settings</span><span class="command-aliases">config</span><span class="command-desc">Show all settings</span></div>
+                    <div class="command-item"><span class="command-name">settingsstaff</span><span class="command-aliases">sstaff</span><span class="command-desc">Manage staff roles</span></div>
+                    <div class="command-item"><span class="command-name">settingsstafflist</span><span class="command-aliases">stafflist</span><span class="command-desc">List staff roles</span></div>
+                    <div class="command-item"><span class="command-name">settingsstaffwhitelist</span><span class="command-aliases">swl</span><span class="command-desc">Manage staff whitelist</span></div>
+                    <div class="command-item"><span class="command-name">staff</span><span class="command-aliases">staffinfo</span><span class="command-desc">Show all staff members</span></div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">🤖 Akhi Bot</div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="commands.html">Commands</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+            <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        function filterCommands() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const cards = document.querySelectorAll('.category-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
