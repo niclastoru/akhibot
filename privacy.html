@@ -4,7 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Akhi Bot</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0F0F0F;
+            color: #FFFFFF;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #5865F2, #1DB954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #5865F2;
+        }
+        
+        .nav-btn {
+            background: #5865F2;
+            color: white !important;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+        }
+        
+        .page-header {
+            padding: 8rem 5% 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(29,185,84,0.1) 100%);
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #5865F2, #1DB954);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .content-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 5% 5rem;
+        }
+        
+        .content-card {
+            background: #1A1A1A;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .content-card h2 {
+            color: #5865F2;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.5rem;
+        }
+        
+        .content-card h2:first-of-type {
+            margin-top: 0;
+        }
+        
+        .content-card p {
+            color: #888;
+            margin-bottom: 1rem;
+        }
+        
+        .content-card ul {
+            color: #888;
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-card li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .content-card code {
+            background: #0F0F0F;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #1DB954;
+        }
+        
+        .footer {
+            background: #0A0A0A;
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: #5865F2;
+        }
+        
+        .footer-copyright {
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -13,34 +197,98 @@
             <a href="index.html">Home</a>
             <a href="privacy.html">Privacy</a>
             <a href="terms.html">Terms</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
         </div>
     </nav>
 
-    <section style="padding: 8rem 5% 4rem; max-width: 900px; margin: 0 auto;">
-        <h1 style="font-size: 3rem; margin-bottom: 2rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Privacy Policy</h1>
-        <p style="color: var(--gray); margin-bottom: 2rem;">Last Updated: April 19, 2026</p>
-        
-        <div style="background: var(--card-bg); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">1. Information We Collect</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem;">Akhi Bot collects only necessary data for functionality: Server IDs, User IDs, Message Content (temporary for snipe), and Voice Activity for statistics. No personal information is collected without purpose.</p>
+    <div class="page-header">
+        <h1>Privacy Policy</h1>
+        <p>Last Updated: April 19, 2026</p>
+    </div>
+
+    <section class="content-section">
+        <div class="content-card">
+            <h2>1. General Information</h2>
+            <p>Protecting your data is important to us. This privacy policy explains what data Akhi Bot collects, how it is used, and what rights you have.</p>
             
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">2. How We Use Your Data</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem;">Data is used exclusively for bot features: Leveling, Moderation Logs, Welcome Messages, Custom Settings, and Statistics. We NEVER sell or share your data with third parties.</p>
+            <h2>2. Responsible Entity</h2>
+            <p>The developer is responsible for data processing:</p>
+            <ul>
+                <li><strong>Discord:</strong> @auserwaehlte</li>
+                <li><strong>Website:</strong> akhi-bot-website.vercel.app</li>
+            </ul>
             
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">3. Data Storage</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem;">Data is stored securely on Supabase (EU Region) and Render.com (USA). Both providers are GDPR compliant.</p>
+            <h2>3. Collected Data</h2>
+            <p>Akhi Bot stores the following data:</p>
+            <ul>
+                <li><strong>Server IDs:</strong> For server-specific settings (prefix, language, log channels)</li>
+                <li><strong>User IDs:</strong> For leveling, economy, warnings, and moderation</li>
+                <li><strong>Message Content:</strong> Only temporarily for the snipe function (max. 1 hour)</li>
+                <li><strong>Voice Activity:</strong> For statistics (duration, channel)</li>
+                <li><strong>Role IDs:</strong> For auto-role, level roles, team hierarchy</li>
+            </ul>
             
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">4. Data Deletion</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem;">Server admins can delete all server data using <code style="background: var(--dark); padding: 0.2rem 0.5rem; border-radius: 5px;">!settings reset</code>. Individual users can request data deletion via Discord DM to the developer.</p>
+            <h2>4. Purpose of Data Storage</h2>
+            <p>Data is used exclusively for bot functionality:</p>
+            <ul>
+                <li>Leveling system & leaderboards</li>
+                <li>Moderation logs & warnings</li>
+                <li>Welcome messages & auto-roles</li>
+                <li>Custom server settings</li>
+                <li>Statistics & analytics</li>
+            </ul>
             
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">5. Contact</h2>
-            <p style="color: var(--gray);">Discord: @auserwaehlte | Support Server: discord.gg/yourserver</p>
+            <h2>5. Storage Duration</h2>
+            <ul>
+                <li><strong>Leveling/Economy:</strong> Permanent (until server removes bot)</li>
+                <li><strong>Messages (Snipe):</strong> Maximum 1 hour</li>
+                <li><strong>Logs:</strong> 30 days</li>
+                <li><strong>Warnings:</strong> Until manual deletion</li>
+            </ul>
+            
+            <h2>6. Data Sharing</h2>
+            <p><strong>None!</strong> Data is never shared with third parties, sold, or used for advertising.</p>
+            
+            <h2>7. Hosting & Database</h2>
+            <ul>
+                <li><strong>Bot Hosting:</strong> Render.com (USA)</li>
+                <li><strong>Database:</strong> Supabase (EU Region)</li>
+            </ul>
+            <p>Both providers are GDPR compliant.</p>
+            
+            <h2>8. Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+                <li><strong>Access:</strong> What data is stored about you?</li>
+                <li><strong>Deletion:</strong> Delete your data</li>
+                <li><strong>Correction:</strong> Correct incorrect data</li>
+            </ul>
+            <p>Contact the developer via Discord for requests.</p>
+            
+            <h2>9. Data Deletion</h2>
+            <p>Server administrators can delete all server data with <code>!settings reset</code>.<br>
+            Individual users can request data deletion via DM to <strong>@auserwaehlte</strong>.</p>
+            
+            <h2>10. Changes</h2>
+            <p>This privacy policy may be updated. The current version is always available at this URL.</p>
+            
+            <h2>11. Contact</h2>
+            <p>For privacy questions:</p>
+            <ul>
+                <li><strong>Discord:</strong> @auserwaehlte</li>
+                <li><strong>Support Server:</strong> discord.gg/yourserver</li>
+            </ul>
         </div>
     </section>
 
     <footer class="footer">
         <div class="footer-content">
             <div class="logo">🤖 Akhi Bot</div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
             <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
         </div>
     </footer>
