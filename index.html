@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AKHI BOT || NEXT GEN DISCORD BOT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akhi Bot – Next Gen Discord Bot</title>
     <style>
         * {
             margin: 0;
@@ -12,360 +12,284 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #000000;
-            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #0A0A0A;
+            color: #EDEDED;
             line-height: 1.5;
             scroll-behavior: smooth;
         }
 
-        /* Brutale Animations */
-        @keyframes glitch {
-            0% { text-shadow: -3px 0 #ff00de, 3px 0 #00ffcc; }
-            25% { text-shadow: 3px 0 #ff00de, -3px 0 #00ffcc; }
-            50% { text-shadow: -3px 0 #ff00de, 3px 0 #00ffcc; }
-            75% { text-shadow: 3px 0 #ff00de, -3px 0 #00ffcc; }
-            100% { text-shadow: -3px 0 #ff00de, 3px 0 #00ffcc; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-
-        @keyframes borderPulse {
-            0%, 100% { border-color: #5865F2; box-shadow: 0 0 5px #5865F2; }
-            50% { border-color: #ff00de; box-shadow: 0 0 20px #ff00de; }
-        }
-
-        /* Scanner-Effekt */
-        .scan-line {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(88, 101, 242, 0.03), transparent);
-            pointer-events: none;
-            z-index: 9999;
-            animation: scan 8s linear infinite;
-        }
-
-        /* Navigation - cyberpunk */
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1.2rem 5%;
+            padding: 1.2rem 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(12px);
             z-index: 1000;
-            border-bottom: 2px solid #5865F2;
-            box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .logo {
-            font-size: 1.9rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, #FFFFFF, #5865F2, #ff00de, #00ffcc);
-            background-size: 300% 300%;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(110deg, #FFFFFF, #A0A0FF);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: borderPulse 3s infinite;
-            text-transform: uppercase;
         }
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2.2rem;
             align-items: center;
         }
 
         .nav-links a {
-            color: #ccc;
+            color: #CCCCCC;
             text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-weight: 500;
+            font-size: 0.95rem;
             transition: 0.2s;
         }
 
         .nav-links a:hover {
-            color: #ff00de;
-            text-shadow: 0 0 5px #ff00de;
+            color: #FFFFFF;
         }
 
         .nav-btn {
-            background: linear-gradient(95deg, #5865F2, #ff00de);
-            color: white !important;
-            padding: 0.7rem 2rem;
-            border-radius: 0px;
-            font-weight: 800;
+            background: #FFFFFF;
+            color: #0A0A0A !important;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
             transition: 0.2s;
-            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
         }
 
         .nav-btn:hover {
-            transform: scale(1.05);
-            letter-spacing: 2px;
-            background: linear-gradient(95deg, #ff00de, #5865F2);
+            background: #DDDDDD;
+            transform: scale(0.98);
         }
 
-        /* Hero - brutal */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 0 5%;
+            padding: 0 6%;
             position: relative;
-            background: radial-gradient(circle at 20% 50%, #0a0a0a, #000000);
-            border-bottom: 1px solid #5865F2;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(88, 101, 242, 0.05) 0px, rgba(88, 101, 242, 0.05) 1px, transparent 1px, transparent 12px);
-            pointer-events: none;
         }
 
         .hero-content {
-            max-width: 700px;
-            position: relative;
-            z-index: 2;
+            max-width: 650px;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .hero-badge {
             display: inline-block;
-            background: rgba(255, 0, 222, 0.2);
-            color: #ff00de;
-            padding: 0.5rem 1.5rem;
-            font-weight: 800;
+            background: rgba(255, 255, 255, 0.03);
+            color: #AAAAAA;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
             font-size: 0.8rem;
-            letter-spacing: 2px;
+            font-weight: 500;
             margin-bottom: 1.5rem;
-            border-left: 4px solid #ff00de;
-            text-transform: uppercase;
+            border: 0.5px solid rgba(255,255,255,0.1);
         }
 
         .hero h1 {
-            font-size: 5.5rem;
-            font-weight: 900;
-            line-height: 1.1;
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.2;
             margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #fff, #5865F2, #ff00de);
+            letter-spacing: -1.5px;
+            background: linear-gradient(125deg, #FFFFFF, #8888FF);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.3rem;
-            color: #aaa;
+            font-size: 1.2rem;
+            color: #999999;
             margin-bottom: 2.5rem;
-            font-weight: 400;
-            border-left: 2px solid #5865F2;
-            padding-left: 20px;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 1rem 2.5rem;
-            font-weight: 800;
+            padding: 0.9rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
             text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             transition: 0.2s;
             display: inline-block;
-            cursor: pointer;
         }
 
         .btn-primary {
-            background: #000;
-            color: #fff;
-            border: 2px solid #ff00de;
-            box-shadow: 0 0 15px rgba(255, 0, 222, 0.5);
+            background: #FFFFFF;
+            color: #000000;
         }
 
         .btn-primary:hover {
-            background: #ff00de;
-            color: #000;
-            border-color: #fff;
-            transform: skewX(-5deg);
+            background: #E0E0E0;
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #fff;
-            border: 2px solid #5865F2;
+            color: #FFFFFF;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .btn-secondary:hover {
-            background: #5865F2;
-            color: #000;
-            transform: skewX(5deg);
+            border-color: #FFFFFF;
+            background: rgba(255,255,255,0.03);
         }
 
         .hero-stats {
             display: flex;
-            gap: 4rem;
-            margin-top: 4rem;
+            gap: 2.5rem;
+            margin-top: 3rem;
         }
 
         .stat-number {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #ff00de;
-            text-shadow: 0 0 10px #ff00de;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #FFFFFF;
         }
 
         .stat-label {
-            color: #888;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+            color: #666666;
+            font-size: 0.85rem;
         }
 
-        /* Features - Grid mit Cyberpunk Cards */
         .features {
-            padding: 6rem 5%;
-            background: #030303;
-            border-top: 1px solid #ff00de;
-            border-bottom: 1px solid #5865F2;
+            padding: 5rem 6%;
+            background: #050505;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3.5rem;
         }
 
         .section-title h2 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #fff, #ff00de);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
         }
 
         .section-title p {
-            text-align: center;
-            color: #777;
-            margin-top: 1rem;
-            font-size: 1.1rem;
+            color: #777777;
+            margin-top: 0.8rem;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
+            gap: 1.8rem;
         }
 
         .feature-card {
-            background: #0a0a0a;
+            background: #0F0F0F;
             padding: 2rem;
-            border: 1px solid #222;
-            transition: 0.2s;
-            clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
+            border-radius: 24px;
+            border: 1px solid #1A1A1A;
+            transition: all 0.25s;
         }
 
         .feature-card:hover {
-            border-color: #ff00de;
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 0 30px rgba(255, 0, 222, 0.3);
-            background: #0f0f0f;
+            border-color: #333333;
+            transform: translateY(-6px);
+            background: #121212;
         }
 
         .feature-icon {
-            font-size: 3.5rem;
-            filter: drop-shadow(0 0 5px #5865F2);
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
         }
 
         .feature-card h3 {
-            font-size: 1.6rem;
-            margin: 1rem 0;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
-        /* Commands - Terminal Style */
+        .feature-card p {
+            color: #888888;
+            font-size: 0.95rem;
+        }
+
         .commands-preview {
-            padding: 6rem 5%;
-            background: #000;
+            padding: 5rem 6%;
+            background: #0A0A0A;
         }
 
         .commands-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin: 3rem 0;
         }
 
         .command-category {
-            background: #050505;
-            border: 1px solid #5865F2;
+            background: #0F0F0F;
+            border-radius: 20px;
             padding: 1.5rem;
-            transition: 0.2s;
-        }
-
-        .command-category:hover {
-            border-color: #ff00de;
-            box-shadow: 0 0 20px rgba(255, 0, 222, 0.2);
+            border: 1px solid #1C1C1C;
         }
 
         .command-category h3 {
-            font-family: monospace;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 1rem;
-            color: #ff00de;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #222;
         }
 
         .command-list {
             list-style: none;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 0.6rem;
         }
 
         .command-list li {
-            background: #111;
-            padding: 0.3rem 1rem;
+            background: #141414;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
             font-family: monospace;
-            font-size: 0.85rem;
-            color: #0f0;
-            border-left: 2px solid #00ffcc;
+            font-size: 0.8rem;
+            color: #BBBBBB;
         }
 
         .command-list li::before {
-            content: '>';
-            color: #ff00de;
-            margin-right: 6px;
-            font-weight: bold;
+            content: '/';
+            color: #8888FF;
+            margin-right: 0.2rem;
         }
 
         .center-btn {
             text-align: center;
         }
 
-        /* Footer */
         .footer {
-            background: #010101;
-            padding: 3rem 5%;
-            border-top: 3px solid #5865F2;
+            padding: 2.5rem 6%;
+            background: #050505;
+            border-top: 1px solid rgba(255,255,255,0.03);
         }
 
         .footer-content {
@@ -373,114 +297,122 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
             gap: 2rem;
         }
 
         .footer-links a {
-            color: #aaa;
+            color: #777777;
             text-decoration: none;
-            margin: 0 1rem;
-            text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .footer-links a:hover {
-            color: #ff00de;
+            color: #FFFFFF;
+        }
+
+        .footer-copyright {
+            color: #555555;
+            font-size: 0.8rem;
         }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .navbar { flex-direction: column; gap: 1rem; }
-            .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 5%;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="scan-line"></div>
 
     <nav class="navbar">
-        <div class="logo">⛧ AKHI BOT ⛧</div>
+        <div class="logo">akhi bot</div>
         <div class="nav-links">
-            <a href="index.html">[HOME]</a>
-            <a href="commands.html">[COMMANDS]</a>
-            <a href="privacy.html">[PRIVACY]</a>
-            <a href="terms.html">[TERMS]</a>
-            <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">++ ADD TO DISCORD ++</a>
+            <a href="index.html">Home</a>
+            <a href="commands.html">Commands</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
         </div>
     </nav>
 
     <section class="hero">
         <div class="hero-content">
-            <span class="hero-badge">⚡ 180+ COMMANDS // 24/7 ONLINE ⚡</span>
-            <h1>THE ULTIMATE<br>WEAPON</h1>
-            <p>Moderation. Leveling. Music. Economy. Games.<br>Your server will never be the same.</p>
+            <span class="hero-badge">180+ Commands • 24/7 • 17 Categories</span>
+            <h1>The only Discord bot you'll ever need.</h1>
+            <p>Moderation, Leveling, Music, Economy, Games – built for speed and reliability.</p>
             <div class="hero-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="btn btn-primary">⚡ INVADE NOW ⚡</a>
-                <a href="#features" class="btn btn-secondary">// DIVE DEEPER</a>
+                <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="btn btn-primary">Invite Akhi →</a>
+                <a href="#features" class="btn btn-secondary">Explore</a>
             </div>
             <div class="hero-stats">
-                <div class="stat-item"><div class="stat-number">180+</div><div class="stat-label">COMMANDS</div></div>
-                <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">UPTIME</div></div>
-                <div class="stat-item"><div class="stat-number">17</div><div class="stat-label">MODULES</div></div>
+                <div class="stat-item"><div class="stat-number">180+</div><div class="stat-label">Commands</div></div>
+                <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Uptime</div></div>
+                <div class="stat-item"><div class="stat-number">17</div><div class="stat-label">Modules</div></div>
             </div>
         </div>
     </section>
 
     <section id="features" class="features">
         <div class="section-title">
-            <h2>// CYBERPUNK FEATURES //</h2>
-            <p>next-gen tools for next-gen servers</p>
+            <h2>Built different.</h2>
+            <p>Everything your server needs. Nothing you don't.</p>
         </div>
         <div class="features-grid">
-            <div class="feature-card"><div class="feature-icon">🛡️</div><h3>ADVANCED MOD</h3><p>Auto-mod, warns, logs, timeout – full control.</p></div>
-            <div class="feature-card"><div class="feature-icon">📊</div><h3>LEVELING RAGE</h3><p>XP, leaderboards, rank roles & rewards.</p></div>
-            <div class="feature-card"><div class="feature-icon">🎵</div><h3>CRYSTAL MUSIC</h3><p>YouTube, Spotify, SoundCloud with filters.</p></div>
-            <div class="feature-card"><div class="feature-icon">💰</div><h3>ECONOMY WARS</h3><p>Daily, shop, gamble, transfer – become rich.</p></div>
-            <div class="feature-card"><div class="feature-icon">🎤</div><h3>VOICEMASTER</h3><p>Custom VC – full member control.</p></div>
-            <div class="feature-card"><div class="feature-icon">🎁</div><h3>GIVEAWAYS</h3><p>Pro giveaways with reroll & requirements.</p></div>
+            <div class="feature-card"><div class="feature-icon">🛡️</div><h3>Moderation</h3><p>Auto-mod, warn, timeout, purge, advanced logging.</p></div>
+            <div class="feature-card"><div class="feature-icon">📊</div><h3>Leveling</h3><p>XP, leaderboards, rank roles, custom rewards.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎵</div><h3>Music</h3><p>High quality audio from YouTube, Spotify, SoundCloud.</p></div>
+            <div class="feature-card"><div class="feature-icon">💰</div><h3>Economy</h3><p>Daily, work, shop, gamble, transfer system.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎤</div><h3>VoiceMaster</h3><p>Custom voice channels with full member control.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎁</div><h3>Giveaways</h3><p>Professional giveaways with reroll & requirements.</p></div>
         </div>
     </section>
 
     <section class="commands-preview">
         <div class="section-title">
-            <h2>// COMMAND DATABASE //</h2>
-            <p>only a fraction of our arsenal</p>
+            <h2>Command surface</h2>
+            <p>Just a glimpse. 180+ total.</p>
         </div>
         <div class="commands-grid">
-            <div class="command-category"><h3>🛡️ MODERATION</h3><ul class="command-list"><li>ban</li><li>kick</li><li>warn</li><li>timeout</li><li>purge</li><li>lock</li><li>unlock</li></ul></div>
-            <div class="command-category"><h3>📊 LEVELING</h3><ul class="command-list"><li>rank</li><li>leaderboard</li><li>levelroles</li><li>setlevel</li><li>addxp</li></ul></div>
-            <div class="command-category"><h3>🎵 MUSIC</h3><ul class="command-list"><li>play</li><li>skip</li><li>queue</li><li>volume</li><li>loop</li><li>pause</li><li>resume</li></ul></div>
-            <div class="command-category"><h3>💰 ECONOMY</h3><ul class="command-list"><li>daily</li><li>work</li><li>balance</li><li>pay</li><li>roulette</li><li>slots</li></ul></div>
+            <div class="command-category"><h3>🛡️ Moderation</h3><ul class="command-list"><li>ban</li><li>kick</li><li>warn</li><li>timeout</li><li>purge</li><li>lock</li><li>unlock</li></ul></div>
+            <div class="command-category"><h3>📊 Leveling</h3><ul class="command-list"><li>rank</li><li>leaderboard</li><li>levelroles</li><li>setlevel</li><li>addxp</li></ul></div>
+            <div class="command-category"><h3>🎵 Music</h3><ul class="command-list"><li>play</li><li>skip</li><li>queue</li><li>volume</li><li>loop</li><li>pause</li><li>resume</li></ul></div>
+            <div class="command-category"><h3>💰 Economy</h3><ul class="command-list"><li>daily</li><li>work</li><li>balance</li><li>pay</li><li>roulette</li><li>slots</li></ul></div>
         </div>
         <div class="center-btn">
-            <a href="commands.html" class="btn btn-secondary">[ VIEW 180+ COMMANDS ] →</a>
+            <a href="commands.html" class="btn btn-secondary">View all commands →</a>
         </div>
     </section>
 
     <footer class="footer">
         <div class="footer-content">
-            <div class="logo" style="font-size:1.2rem;">⚡ AKHI BOT // POWERED BY CHAOS ⚡</div>
+            <div class="logo" style="font-size:1.2rem;">akhi bot</div>
             <div class="footer-links">
-                <a href="index.html">HOME</a>
-                <a href="commands.html">COMMANDS</a>
-                <a href="privacy.html">PRIVACY</a>
-                <a href="terms.html">TERMS</a>
+                <a href="index.html">Home</a>
+                <a href="commands.html">Commands</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
             </div>
-            <div class="footer-copyright">© 2026 AKHI BOT — ALL SYSTEMS ACTIVE.</div>
+            <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
         </div>
     </footer>
 
-    <script>
-        // roher cyberpunk vibe: glitch effekt auf h1
-        const glitchTitle = document.querySelector('.hero h1');
-        if(glitchTitle) {
-            setInterval(() => {
-                glitchTitle.style.animation = 'none';
-                setTimeout(() => {
-                    glitchTitle.style.animation = 'glitch 0.2s ease-in-out';
-                }, 10);
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
