@@ -3,198 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Akhi Bot</title>
+    <title>Privacy Policy – Akhi Bot</title>
     <style>
+        /* ========== MODERN RESET ========== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #0F0F0F;
-            color: #FFFFFF;
-            line-height: 1.6;
+
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #1DB954;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --light: #EDEDED;
+            --white: #FFFFFF;
+            --gray: #888888;
+            --gray-light: #AAAAAA;
+            --gray-dim: #666666;
+            --card-bg: #0F0F0F;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --gradient-text: linear-gradient(125deg, #FFFFFF, #8888FF);
+            --gradient-logo: linear-gradient(110deg, #FFFFFF, #A0A0FF);
+            --gradient-page: linear-gradient(135deg, #5865F2 0%, #1DB954 100%);
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== CUSTOM SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        /* ========== NAVIGATION ========== */
         .navbar {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 1.2rem 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border);
         }
-        
+
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #5865F2, #1DB954);
+            letter-spacing: -0.5px;
+            background: var(--gradient-logo);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-decoration: none;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.2rem;
             align-items: center;
+            list-style: none;
         }
-        
+
         .nav-links a {
-            color: white;
+            color: #CCCCCC;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
         }
-        
+
         .nav-links a:hover {
-            color: #5865F2;
+            color: var(--white);
         }
-        
+
         .nav-btn {
-            background: #5865F2;
-            color: white !important;
-            padding: 0.7rem 1.5rem;
-            border-radius: 50px;
+            background: var(--white);
+            color: var(--dark) !important;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
         }
-        
+
         .nav-btn:hover {
-            background: #4752C4;
-            transform: translateY(-2px);
+            background: #DDDDDD;
+            transform: scale(0.98);
         }
-        
+
+        /* ========== PAGE HEADER ========== */
         .page-header {
-            padding: 8rem 5% 2rem;
+            padding: 9rem 6% 3rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(29,185,84,0.1) 100%);
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(29, 185, 84, 0.1) 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            filter: blur(200px);
+            opacity: 0.15;
+            right: -150px;
+            top: -150px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            filter: blur(200px);
+            opacity: 0.1;
+            left: -150px;
+            bottom: -150px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .page-header h1 {
             font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #5865F2, #1DB954);
+            background: var(--gradient-page);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+            letter-spacing: -1px;
         }
-        
+
         .page-header p {
-            color: #888;
+            color: var(--gray);
             font-size: 1.1rem;
         }
-        
+
+        /* ========== CONTENT SECTION ========== */
         .content-section {
             max-width: 900px;
             margin: 0 auto;
-            padding: 3rem 5% 5rem;
+            padding: 3rem 6% 5rem;
         }
-        
+
         .content-card {
-            background: #1A1A1A;
+            background: var(--card-bg);
             padding: 2.5rem;
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
-        
+
+        .content-card:hover {
+            border-color: var(--border-hover);
+        }
+
         .content-card h2 {
-            color: #5865F2;
-            margin: 2rem 0 1rem 0;
+            color: var(--primary);
+            margin: 2rem 0 1rem;
             font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
         }
-        
+
         .content-card h2:first-of-type {
             margin-top: 0;
         }
-        
+
         .content-card p {
-            color: #888;
+            color: var(--gray);
             margin-bottom: 1rem;
         }
-        
+
         .content-card ul {
-            color: #888;
+            color: var(--gray);
             margin-left: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .content-card li {
             margin-bottom: 0.5rem;
         }
-        
+
+        .content-card strong {
+            color: var(--gray-light);
+            font-weight: 600;
+        }
+
         .content-card code {
             background: #0F0F0F;
             padding: 0.2rem 0.5rem;
             border-radius: 5px;
-            font-family: monospace;
-            color: #1DB954;
+            font-family: 'Fira Code', 'SF Mono', Monaco, monospace;
+            color: var(--secondary);
+            font-size: 0.9em;
+            border: 1px solid rgba(29, 185, 84, 0.2);
         }
-        
+
+        /* ========== FOOTER ========== */
         .footer {
-            background: #0A0A0A;
-            padding: 3rem 5%;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem 6%;
+            background: var(--darker);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
         }
-        
+
         .footer-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 1.5rem;
         }
-        
+
         .footer-links {
             display: flex;
             gap: 2rem;
+            flex-wrap: wrap;
         }
-        
+
         .footer-links a {
-            color: #888;
+            color: #777777;
             text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
         }
-        
+
         .footer-links a:hover {
-            color: #5865F2;
+            color: var(--white);
         }
-        
+
         .footer-copyright {
-            color: #888;
+            color: #555555;
+            font-size: 0.8rem;
         }
-        
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 gap: 1rem;
+                padding: 1rem 5%;
             }
-            
+
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 1rem;
             }
-            
+
+            .page-header {
+                padding: 10rem 5% 2rem;
+            }
+
             .page-header h1 {
                 font-size: 2.5rem;
             }
-            
+
             .content-card {
                 padding: 1.5rem;
             }
+
+            .content-card h2 {
+                font-size: 1.3rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .content-card {
+                padding: 1.25rem;
+                border-radius: 16px;
+            }
+
+            .content-card h2 {
+                font-size: 1.15rem;
+            }
+
+            .content-card ul {
+                margin-left: 1.2rem;
+            }
+        }
+
+        /* ========== ACCESSIBILITY ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo">🤖 Akhi Bot</div>
+        <a href="index.html" class="logo">akhi bot</a>
         <div class="nav-links">
             <a href="index.html">Home</a>
+            <a href="commands.html">Commands</a>
             <a href="privacy.html">Privacy</a>
             <a href="terms.html">Terms</a>
             <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
@@ -207,17 +392,17 @@
     </div>
 
     <section class="content-section">
-        <div class="content-card">
+        <div class="content-card animate">
             <h2>1. General Information</h2>
             <p>Protecting your data is important to us. This privacy policy explains what data Akhi Bot collects, how it is used, and what rights you have.</p>
-            
+
             <h2>2. Responsible Entity</h2>
             <p>The developer is responsible for data processing:</p>
             <ul>
                 <li><strong>Discord:</strong> @auserwaehlte</li>
                 <li><strong>Website:</strong> akhi-bot-website.vercel.app</li>
             </ul>
-            
+
             <h2>3. Collected Data</h2>
             <p>Akhi Bot stores the following data:</p>
             <ul>
@@ -227,17 +412,17 @@
                 <li><strong>Voice Activity:</strong> For statistics (duration, channel)</li>
                 <li><strong>Role IDs:</strong> For auto-role, level roles, team hierarchy</li>
             </ul>
-            
+
             <h2>4. Purpose of Data Storage</h2>
             <p>Data is used exclusively for bot functionality:</p>
             <ul>
-                <li>Leveling system & leaderboards</li>
-                <li>Moderation logs & warnings</li>
-                <li>Welcome messages & auto-roles</li>
+                <li>Leveling system &amp; leaderboards</li>
+                <li>Moderation logs &amp; warnings</li>
+                <li>Welcome messages &amp; auto-roles</li>
                 <li>Custom server settings</li>
-                <li>Statistics & analytics</li>
+                <li>Statistics &amp; analytics</li>
             </ul>
-            
+
             <h2>5. Storage Duration</h2>
             <ul>
                 <li><strong>Leveling/Economy:</strong> Permanent (until server removes bot)</li>
@@ -245,17 +430,17 @@
                 <li><strong>Logs:</strong> 30 days</li>
                 <li><strong>Warnings:</strong> Until manual deletion</li>
             </ul>
-            
+
             <h2>6. Data Sharing</h2>
             <p><strong>None!</strong> Data is never shared with third parties, sold, or used for advertising.</p>
-            
-            <h2>7. Hosting & Database</h2>
+
+            <h2>7. Hosting &amp; Database</h2>
             <ul>
                 <li><strong>Bot Hosting:</strong> Render.com (USA)</li>
                 <li><strong>Database:</strong> Supabase (EU Region)</li>
             </ul>
             <p>Both providers are GDPR compliant.</p>
-            
+
             <h2>8. Your Rights</h2>
             <p>You have the right to:</p>
             <ul>
@@ -264,14 +449,14 @@
                 <li><strong>Correction:</strong> Correct incorrect data</li>
             </ul>
             <p>Contact the developer via Discord for requests.</p>
-            
+
             <h2>9. Data Deletion</h2>
             <p>Server administrators can delete all server data with <code>!settings reset</code>.<br>
             Individual users can request data deletion via DM to <strong>@auserwaehlte</strong>.</p>
-            
+
             <h2>10. Changes</h2>
             <p>This privacy policy may be updated. The current version is always available at this URL.</p>
-            
+
             <h2>11. Contact</h2>
             <p>For privacy questions:</p>
             <ul>
@@ -283,14 +468,16 @@
 
     <footer class="footer">
         <div class="footer-content">
-            <div class="logo">🤖 Akhi Bot</div>
-            <div class="footer-links">
-                <a href="index.html">Home</a>
+            <a href="index.html" class="logo" style="font-size: 1.2rem;">akhi bot</a>
+            <div class="footer-l="index.html">inks">
+                <a hrefHome</a>
+                <a href="commands.html">Commands</a>
                 <a href="privacy.html">Privacy Policy</a>
                 <a href="terms.html">Terms of Service</a>
             </div>
             <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
         </div>
     </footer>
+
 </body>
 </html>
