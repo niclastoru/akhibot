@@ -3,24 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commands - Akhi Bot</title>
+    <title>Commands – Akhi Bot</title>
     <style>
+        /* ========== MODERN RESET ========== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #0F0F0F;
-            color: #FFFFFF;
-            line-height: 1.6;
+
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #1DB954;
+            --dark: #0F0F0F;
+            --darker: #0A0A0A;
+            --light: #FFFFFF;
+            --gray: #888888;
+            --gray-light: #AAAAAA;
+            --card-bg: #1A1A1A;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            --gradient: linear-gradient(135deg, #5865F2 0%, #1DB954 100%);
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== CUSTOM SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ========== NAVIGATION ========== */
         .navbar {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
             padding: 1.5rem 5%;
             display: flex;
@@ -28,183 +68,295 @@
             align-items: center;
             background: rgba(15, 15, 15, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border);
         }
-        
+
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #5865F2, #1DB954);
+            background: var(--gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-decoration: none;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
+            list-style: none;
         }
-        
+
         .nav-links a {
-            color: white;
+            color: var(--light);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            font-size: 1rem;
         }
-        
+
         .nav-links a:hover {
-            color: #5865F2;
+            color: var(--primary);
         }
-        
+
         .nav-btn {
-            background: #5865F2;
-            color: white !important;
+            background: var(--primary);
+            color: var(--light) !important;
             padding: 0.7rem 1.5rem;
             border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
         }
-        
+
         .nav-btn:hover {
-            background: #4752C4;
+            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
         }
-        
+
+        /* ========== PAGE HEADER ========== */
         .page-header {
-            padding: 8rem 5% 2rem;
+            padding: 9rem 5% 3rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(29,185,84,0.1) 100%);
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(29, 185, 84, 0.1) 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            filter: blur(200px);
+            opacity: 0.15;
+            right: -150px;
+            top: -150px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            filter: blur(200px);
+            opacity: 0.1;
+            left: -150px;
+            bottom: -150px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-header > * {
+            position: relative;
+            z-index: 1;
+        }
+
         .page-header h1 {
             font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #5865F2, #1DB954);
+            background: var(--gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+            letter-spacing: -1px;
         }
-        
+
         .page-header p {
-            color: #888;
+            color: var(--gray);
             font-size: 1.1rem;
         }
-        
+
         .commands-stats {
             display: flex;
             justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
+            gap: 1.5rem;
+            margin: 2rem 0 0;
+            flex-wrap: wrap;
         }
-        
+
         .stat-badge {
-            background: #1A1A1A;
+            background: var(--card-bg);
             padding: 0.8rem 2rem;
             border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
         }
-        
+
+        .stat-badge:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
         .stat-badge span {
-            color: #5865F2;
+            color: var(--primary);
             font-weight: 700;
             font-size: 1.5rem;
+            line-height: 1;
         }
-        
+
+        /* ========== CONTENT SECTION ========== */
         .content-section {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 5% 5rem;
+            padding: 3rem 5% 5rem;
         }
-        
+
+        /* ========== SEARCH BOX ========== */
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--light);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.2);
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        /* ========== COMMANDS GRID ========== */
         .commands-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 1.5rem;
         }
-        
+
         .category-card {
-            background: #1A1A1A;
+            background: var(--card-bg);
             border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
-        
+
         .category-card:hover {
             transform: translateY(-5px);
-            border-color: #5865F2;
-            box-shadow: 0 10px 30px rgba(88,101,242,0.2);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.2);
         }
-        
+
+        .category-card.hidden {
+            display: none;
+        }
+
         .category-header {
             padding: 1.2rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.01);
         }
-        
+
         .category-header .emoji {
             font-size: 1.8rem;
+            display: block;
+            line-height: 1;
         }
-        
+
         .category-header h3 {
             font-size: 1.2rem;
             font-weight: 600;
             flex: 1;
         }
-        
+
         .category-header .count {
-            background: rgba(88,101,242,0.2);
-            color: #5865F2;
+            background: rgba(88, 101, 242, 0.2);
+            color: var(--primary);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            flex-shrink: 0;
         }
-        
+
         .command-list {
             padding: 1rem;
+            flex: 1;
         }
-        
+
         .command-item {
             padding: 0.6rem 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             display: flex;
             align-items: flex-start;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            flex-wrap: wrap;
         }
-        
+
         .command-item:last-child {
             border-bottom: none;
         }
-        
+
         .command-name {
-            color: #1DB954;
-            font-family: 'Fira Code', monospace;
+            color: var(--secondary);
+            font-family: 'Fira Code', 'SF Mono', Monaco, monospace;
             font-weight: 600;
-            min-width: 100px;
+            font-size: 0.9rem;
+            min-width: 110px;
+            flex-shrink: 0;
         }
-        
+
+        .command-name::before {
+            content: '/';
+            color: var(--primary);
+            margin-right: 0.2rem;
+        }
+
+        .command-aliases {
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-family: 'Fira Code', 'SF Mono', Monaco, monospace;
+            background: rgba(88, 101, 242, 0.1);
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
         .command-desc {
-            color: #888;
+            color: var(--gray);
             font-size: 0.9rem;
             flex: 1;
+            min-width: 150px;
         }
-        
-        .command-aliases {
-            color: #5865F2;
-            font-size: 0.8rem;
-            font-family: 'Fira Code', monospace;
-        }
-        
+
+        /* ========== FOOTER ========== */
         .footer {
-            background: #0A0A0A;
+            background: var(--darker);
             padding: 3rem 5%;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid var(--border);
         }
-        
+
         .footer-content {
             display: flex;
             justify-content: space-between;
@@ -212,85 +364,137 @@
             flex-wrap: wrap;
             gap: 2rem;
         }
-        
+
         .footer-links {
             display: flex;
             gap: 2rem;
+            flex-wrap: wrap;
         }
-        
+
         .footer-links a {
-            color: #888;
+            color: var(--gray);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
-        
+
         .footer-links a:hover {
-            color: #5865F2;
+            color: var(--primary);
         }
-        
+
         .footer-copyright {
-            color: #888;
+            color: var(--gray);
+            font-size: 0.9rem;
         }
-        
-        .search-box {
-            max-width: 500px;
-            margin: 0 auto 2rem;
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background: #1A1A1A;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
+
+        .animate {
+            animation: fadeUp 0.6s ease forwards;
+            opacity: 0;
         }
-        
-        .search-box input:focus {
-            border-color: #5865F2;
-            box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
-        }
-        
-        .search-box input::placeholder {
-            color: #666;
-        }
-        
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 gap: 1rem;
+                padding: 1rem 5%;
             }
-            
+
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 1rem;
             }
-            
+
+            .page-header {
+                padding: 10rem 5% 2rem;
+            }
+
             .page-header h1 {
                 font-size: 2.5rem;
             }
-            
+
             .commands-stats {
                 flex-direction: column;
-                gap: 1rem;
                 align-items: center;
+                gap: 0.8rem;
             }
-            
+
             .commands-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .command-name {
-                min-width: 80px;
+                min-width: 90px;
+                font-size: 0.85rem;
             }
+
+            .command-desc {
+                min-width: 100%;
+                font-size: 0.85rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .stat-badge {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.9rem;
+            }
+
+            .stat-badge span {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ========== ACCESSIBILITY ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        a:focus-visible,
+        input:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="logo">🤖 Akhi Bot</div>
+        <a href="index.html" class="logo">🤖 Akhi Bot</a>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="commands.html">Commands</a>
@@ -312,12 +516,12 @@
 
     <section class="content-section">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Search commands..." onkeyup="filterCommands()">
+            <input type="text" id="searchInput" placeholder="🔍 Search commands..." autocomplete="off">
         </div>
-        
+
         <div class="commands-grid" id="commandsGrid">
-            
-            <!-- Moderation -->
+
+            <!-- ========== MODERATION ========== -->
             <div class="category-card" data-category="moderation">
                 <div class="category-header">
                     <span class="emoji">🛡️</span>
@@ -351,8 +555,8 @@
                     <div class="command-item"><span class="command-name">wordfilter</span><span class="command-desc">Manage word filter</span></div>
                 </div>
             </div>
-            
-            <!-- Utility -->
+
+            <!-- ========== UTILITY ========== -->
             <div class="category-card" data-category="utility">
                 <div class="category-header">
                     <span class="emoji">🔧</span>
@@ -386,8 +590,8 @@
                     <div class="command-item"><span class="command-name">reminders</span><span class="command-desc">Show active reminders</span></div>
                 </div>
             </div>
-            
-            <!-- Fun -->
+
+            <!-- ========== FUN ========== -->
             <div class="category-card" data-category="fun">
                 <div class="category-header">
                     <span class="emoji">🎮</span>
@@ -418,8 +622,8 @@
                     <div class="command-item"><span class="command-name">wouldyourather</span><span class="command-aliases">wyr</span><span class="command-desc">Would You Rather question</span></div>
                 </div>
             </div>
-            
-            <!-- Music -->
+
+            <!-- ========== MUSIC ========== -->
             <div class="category-card" data-category="music">
                 <div class="category-header">
                     <span class="emoji">🎵</span>
@@ -447,8 +651,8 @@
                     <div class="command-item"><span class="command-name">seek</span><span class="command-desc">Seek to position</span></div>
                 </div>
             </div>
-            
-            <!-- Economy -->
+
+            <!-- ========== ECONOMY ========== -->
             <div class="category-card" data-category="economy">
                 <div class="category-header">
                     <span class="emoji">💰</span>
@@ -470,8 +674,8 @@
                     <div class="command-item"><span class="command-name">use</span><span class="command-desc">Use an item</span></div>
                 </div>
             </div>
-            
-            <!-- Leveling -->
+
+            <!-- ========== LEVELING ========== -->
             <div class="category-card" data-category="leveling">
                 <div class="category-header">
                     <span class="emoji">📊</span>
@@ -500,8 +704,8 @@
                     <div class="command-item"><span class="command-name">levels-stackroles</span><span class="command-desc">Toggle stack roles</span></div>
                 </div>
             </div>
-            
-            <!-- Admin -->
+
+            <!-- ========== ADMIN ========== -->
             <div class="category-card" data-category="admin">
                 <div class="category-header">
                     <span class="emoji">⚙️</span>
@@ -521,8 +725,8 @@
                     <div class="command-item"><span class="command-name">serverrules</span><span class="command-aliases">rules</span><span class="command-desc">Set server rules</span></div>
                     <div class="command-item"><span class="command-name">status</span><span class="command-aliases">setstatus</span><span class="command-desc">Change bot status</span></div>
                     <div class="command-item"><span class="command-name">stickymessage</span><span class="command-aliases">sticky</span><span class="command-desc">Set sticky message</span></div>
-                    <div class="command-item"><span class="command-name">stripstaff</span><span class="command-aliases">removestaff</span><span class="command-desc">Remove staff roles</span></div>
-                    <div class="command-item"><span class="command-name">unbanall</span><span class="command-desc">Unban all users</span></div>
+                    <div class="command-item"><span class="command-name">stripstaff</span><span class="command-aliases">removestaff</span><span class="command-desc">Remove staff roles="</span></div>
+count                    <div class="command-item"><span"> class="command-name">unban12all</span><span class="command-desc">Unban all users</span></div>
                     <div class="command-item"><span class="command-name">unjailall</span><span class="command-desc">Release all from jail</span></div>
                     <div class="command-item"><span class="command-name">vanity-url</span><span class="command-aliases">vanity</span><span class="command-desc">Show vanity URL</span></div>
                     <div class="command-item"><span class="command-name">activity</span><span class="command-aliases">act</span><span class="command-desc">Start VC activity</span></div>
@@ -538,13 +742,13 @@
                     <div class="command-item"><span class="command-name">teamhierarchy</span><span class="command-aliases">th</span><span class="command-desc">Configure team hierarchy</span></div>
                 </div>
             </div>
-            
-            <!-- Server -->
+
+            <!-- ========== SERVER ========== -->
             <div class="category-card" data-category="server">
                 <div class="category-header">
                     <span class="emoji">🌐</span>
                     <h3>Server</h3>
-                    <span class="count">12</span>
+                    <span class</span>
                 </div>
                 <div class="command-list">
                     <div class="command-item"><span class="command-name">autorole</span><span class="command-desc">Set auto-role for new members</span></div>
@@ -561,8 +765,8 @@
                     <div class="command-item"><span class="command-name">sav</span><span class="command-aliases">serverav</span><span class="command-desc">Show server avatar</span></div>
                 </div>
             </div>
-            
-            <!-- Team -->
+
+            <!-- ========== TEAM ========== -->
             <div class="category-card" data-category="team">
                 <div class="category-header">
                     <span class="emoji">👥</span>
@@ -574,14 +778,14 @@
                     <div class="command-item"><span class="command-name">uprank</span><span class="command-aliases">promote</span><span class="command-desc">Promote a user</span></div>
                     <div class="command-item"><span class="command-name">derank</span><span class="command-aliases">demote</span><span class="command-desc">Demote a user</span></div>
                     <div class="command-item"><span class="command-name">uprankinfo</span><span class="command-aliases">upi</span><span class="command-desc">Show promotion history</span></div>
-                    <div class="command-item"><span class="command-name">derankinfo</span><span class="command-aliases">di</span><span class="command-desc">Show demotion history</span></div>
+                    <div class="command-item"><span class="command-name">derankinfo</span><span class="command-aliases">dicommand</span><span class="command-desc">Show demotion history</span></div>
                     <div class="command-item"><span class="command-name">teamlog</span><span class="command-aliases">tlog</span><span class="command-desc">Set team log channel</span></div>
                     <div class="command-item"><span class="command-name">teamlogdisable</span><span class="command-aliases">tlogoff</span><span class="command-desc">Disable team logs</span></div>
                     <div class="command-item"><span class="command-name">teamlogstatus</span><span class="command-aliases">tlogstatus</span><span class="command-desc">Show log settings</span></div>
                 </div>
             </div>
-            
-            <!-- Stats -->
+
+            <!-- ========== STATISTICS ========== -->
             <div class="category-card" data-category="stats">
                 <div class="category-header">
                     <span class="emoji">📈</span>
@@ -594,8 +798,8 @@
                     <div class="command-item"><span class="command-name">top</span><span class="command-desc">Show top users</span></div>
                 </div>
             </div>
-            
-            <!-- Giveaway -->
+
+            <!-- ========== GIVEAWAY ========== -->
             <div class="category-card" data-category="giveaway">
                 <div class="category-header">
                     <span class="emoji">🎁</span>
@@ -610,8 +814,8 @@
                     <div class="command-item"><span class="command-name">getid</span><span class="command-aliases">id</span><span class="command-desc">Show your Discord ID</span></div>
                 </div>
             </div>
-            
-            <!-- VoiceMaster -->
+
+            <!-- ========== VOICEMASTER ========== -->
             <div class="category-card" data-category="voicemaster">
                 <div class="category-header">
                     <span class="emoji">🎤</span>
@@ -619,8 +823,8 @@
                     <span class="count">15</span>
                 </div>
                 <div class="command-list">
-                    <div class="command-item"><span class="command-name">setupvm</span><span class="command-aliases">voicemaster</span><span class="command-desc">Setup VoiceMaster</span></div>
-                    <div class="command-item"><span class="command-name">voicemaster-reset</span><span class="command-aliases">vm-reset</span><span class="command-desc">Reset VoiceMaster</span></div>
+                    <div class="command-item"><span class="command-name">setupvm</span><span class="command-aliases">voicemaster-d</span><span class="command-descesc">Setup VoiceMaster</span></div>
+                   ">Disable <div class="command-item"><span class="command-name">voicemaster-reset</span><span class="command-aliases">vm-reset</span><span class="command-desc">Reset VoiceMaster</span></div>
                     <div class="command-item"><span class="command-name">voice-lock</span><span class="command-aliases">vlock</span><span class="command-desc">Lock your voice channel</span></div>
                     <div class="command-item"><span class="command-name">voice-unlock</span><span class="command-aliases">vunlock</span><span class="command-desc">Unlock your voice channel</span></div>
                     <div class="command-item"><span class="command-name">voice-hide</span><span class="command-aliases">vhide</span><span class="command-desc">Hide your voice channel</span></div>
@@ -636,8 +840,8 @@
                     <div class="command-item"><span class="command-name">voice-info</span><span class="command-desc">Show channel info</span></div>
                 </div>
             </div>
-            
-            <!-- Logs -->
+
+            <!-- ========== LOGS ========== -->
             <div class="category-card" data-category="logs">
                 <div class="category-header">
                     <span class="emoji">📋</span>
@@ -646,12 +850,12 @@
                 </div>
                 <div class="command-list">
                     <div class="command-item"><span class="command-name">logs</span><span class="command-aliases">log</span><span class="command-desc">Show/set log channels</span></div>
-                    <div class="command-item"><span class="command-name">logs-disable</span><span class="command-aliases">logsoff</span><span class="command-desc">Disable logging</span></div>
+                    <div class="command-item"><span class="command-name">logs-disable</span><span class="command-aliases">logsoff</span><span class=" logging</span></div>
                     <div class="command-item"><span class="command-name">logs-reset</span><span class="command-aliases">logreset</span><span class="command-desc">Reset all log settings</span></div>
                 </div>
             </div>
-            
-            <!-- Booster -->
+
+            <!-- ========== BOOSTER ========== -->
             <div class="category-card" data-category="booster">
                 <div class="category-header">
                     <span class="emoji">🚀</span>
@@ -674,8 +878,8 @@
                     <div class="command-item"><span class="command-name">booster-status</span><span class="command-desc">Show booster status</span></div>
                 </div>
             </div>
-            
-            <!-- Games -->
+
+            <!-- ========== GAMES ========== -->
             <div class="category-card" data-category="games">
                 <div class="category-header">
                     <span class="emoji">🎲</span>
@@ -693,8 +897,8 @@
                     <div class="command-item"><span class="command-name">rps</span><span class="command-aliases">rockpaperscissors</span><span class="command-desc">Rock Paper Scissors</span></div>
                 </div>
             </div>
-            
-            <!-- Miscellaneous -->
+
+            <!-- ========== MISCELLANEOUS ========== -->
             <div class="category-card" data-category="miscellaneous">
                 <div class="category-header">
                     <span class="emoji">📦</span>
@@ -709,8 +913,8 @@
                     <div class="command-item"><span class="command-name">vote</span><span class="command-desc">Vote for the bot</span></div>
                 </div>
             </div>
-            
-            <!-- Settings -->
+
+            <!-- ========== SETTINGS ========== -->
             <div class="category-card" data-category="settings">
                 <div class="category-header">
                     <span class="emoji">⚙️</span>
@@ -718,8 +922,9 @@
                     <span class="count">7</span>
                 </div>
                 <div class="command-list">
-                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-aliases">jailconfig</span><span class="command-desc">Configure jail system</span></div>
-                    <div class="command-item"><span class="command-name">settings-jailmsg</span><span class="command-aliases">jailmsg</span><span class="command-desc">Set jail message</span></div>
+                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-aliases">jailconfig</span><span class="command-desc">Configure jail system</span></ {
+div>
+                    <div class="command-item"><           span class="command-name"> constsettings-jailmsg</span><span search class="command-aliasesInput">jailmsg</span><span class="command-desc">Set jail message</span></div>
                     <div class="command-item"><span class="command-name">settings</span><span class="command-aliases">config</span><span class="command-desc">Show all settings</span></div>
                     <div class="command-item"><span class="command-name">settingsstaff</span><span class="command-aliases">sstaff</span><span class="command-desc">Manage staff roles</span></div>
                     <div class="command-item"><span class="command-name">settingsstafflist</span><span class="command-aliases">stafflist</span><span class="command-desc">List staff roles</span></div>
@@ -727,13 +932,13 @@
                     <div class="command-item"><span class="command-name">staff</span><span class="command-aliases">staffinfo</span><span class="command-desc">Show all staff members</span></div>
                 </div>
             </div>
-            
+
         </div>
     </section>
 
     <footer class="footer">
         <div class="footer-content">
-            <div class="logo">🤖 Akhi Bot</div>
+            <a href="index.html" class="logo">🤖 Akhi Bot</a>
             <div class="footer-links">
                 <a href="index.html">Home</a>
                 <a href="commands.html">Commands</a>
@@ -745,20 +950,45 @@
     </footer>
 
     <script>
-        function filterCommands() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
+        (function () = document.getElementById('searchInput');
             const cards = document.querySelectorAll('.category-card');
-            
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(filter)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+
+            function filterCommands() {
+                const filter = searchInput.value.toLowerCase().trim();
+
+                cards.forEach(card => {
+                    if (!filter) {
+                        card.classList.remove('hidden');
+                        return;
+                    }
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(filter)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Live filtering with debounce for smoothness
+            let timeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(filterCommands, 80);
             });
-        }
+
+            // Fade-in animation for cards on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+
+            cards.forEach(card => observer.observe(card));
+        })();
     </script>
 </body>
 </html>
