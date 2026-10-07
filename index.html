@@ -16,6 +16,8 @@
             --primary: #5865F2;
             --primary-dark: #4752C4;
             --secondary: #1DB954;
+            --warning: #FEE75C;
+            --danger: #ED4245;
             --dark: #0A0A0A;
             --darker: #050505;
             --light: #EDEDED;
@@ -28,6 +30,7 @@
             --border-hover: rgba(255, 255, 255, 0.15);
             --gradient-text: linear-gradient(125deg, #FFFFFF, #8888FF);
             --gradient-logo: linear-gradient(110deg, #FFFFFF, #A0A0FF);
+            --gradient-page: linear-gradient(135deg, #5865F2 0%, #1DB954 100%);
         }
 
         html {
@@ -565,6 +568,250 @@
             outline-offset: 3px;
             border-radius: 4px;
         }
+
+        /* ========== SERVICE NOTICE POPUP ========== */
+        .notice-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .notice-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .notice-modal {
+            background: #0F0F0F;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 3rem 2.5rem 2.5rem;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(88, 101, 242, 0.15);
+            transform: translateY(20px) scale(0.97);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.35s ease;
+        }
+
+        .notice-overlay.active .notice-modal {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .notice-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #AAAAAA;
+            font-size: 1.3rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .notice-close:hover {
+            background: rgba(237, 66, 69, 0.15);
+            border-color: var(--danger);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .notice-close:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+        }
+
+        .notice-icon {
+            font-size: 3.2rem;
+            display: block;
+            line-height: 1;
+            margin-bottom: 1.2rem;
+            animation: noticePulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes noticePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        .notice-title {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.6rem;
+            line-height: 1.25;
+        }
+
+        .notice-subtitle {
+            font-size: 0.85rem;
+            color: var(--warning);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.8rem;
+        }
+
+        .notice-body {
+            color: var(--gray);
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .notice-body p {
+            margin-bottom: 1rem;
+        }
+
+        .notice-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .notice-body strong {
+            color: var(--gray-light);
+            font-weight: 600;
+        }
+
+        .notice-highlight {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .notice-owner {
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .notice-owner-label {
+            color: var(--gray-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.4rem;
+        }
+
+        .notice-owner-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: var(--gradient-page);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .notice-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .notice-btn {
+            padding: 0.75rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            min-width: 120px;
+        }
+
+        .notice-btn-primary {
+            background: var(--white);
+            color: #000000;
+        }
+
+        .notice-btn-primary:hover {
+            background: #E0E0E0;
+            transform: translateY(-2px);
+        }
+
+        .notice-btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .notice-btn-secondary:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px);
+        }
+
+        .notice-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .notice-modal {
+                padding: 2.5rem 1.5rem 2rem;
+                border-radius: 20px;
+            }
+
+            .notice-title {
+                font-size: 1.4rem;
+            }
+
+            .notice-icon {
+                font-size: 2.6rem;
+            }
+
+            .notice-body {
+                font-size: 0.92rem;
+            }
+
+            .notice-actions {
+                flex-direction: column;
+            }
+
+            .notice-btn {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .notice-overlay,
+            .notice-modal,
+            .notice-icon {
+                animation: none !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -715,9 +962,39 @@
         </div>
     </footer>
 
+    <!-- ========== SERVICE NOTICE POPUP ========== -->
+    <div class="notice-overlay" id="noticeOverlay" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" aria-hidden="true">
+        <div class="notice-modal" id="noticeModal">
+            <button class="notice-close" id="noticeClose" aria-label="Close notice" title="Close">✕</button>
+
+            <span class="notice-icon">🔧</span>
+
+            <h2 class="notice-title" id="noticeTitle">Akhi Bot is Coming Back Soon</h2>
+            <p class="notice-subtitle">Currently Under Maintenance</p>
+
+            <div class="notice-body">
+                <p>Akhi Bot is <strong>currently unavailable</strong> due to technical issues. We are actively working on resolving the problem to restore full functionality as quickly as possible.</p>
+
+                <p>We sincerely apologize for any inconvenience this may cause. Our team is doing everything we can to bring the bot back online <span class="notice-highlight">better and more stable than ever before</span>.</p>
+
+                <p>Please check back soon for updates. Thank you for your patience and continued support.</p>
+            </div>
+
+            <div class="notice-owner">
+                <p class="notice-owner-label">Owner and Developer</p>
+                <p class="notice-owner-name">Barış Al Kurdi</p>
+            </div>
+
+            <div class="notice-actions">
+                <button type="button" class="notice-btn notice-btn-primary" id="noticeAccept">Got it</button>
+                <a href="info.html" class="notice-btn notice-btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function () {
-            // Fade-In Animation für Feature- und Command-Cards beim Scrollen
+            /* ========== FEATURE / COMMAND ANIMATIONS ========== */
             const cards = document.querySelectorAll('.feature-card, .command-category');
 
             const observer = new IntersectionObserver((entries) => {
@@ -730,6 +1007,55 @@
             }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
             cards.forEach(card => observer.observe(card));
+
+            /* ========== SERVICE NOTICE POPUP ========== */
+            const STORAGE_KEY = 'akhi_notice_seen_v1';
+            const overlay = document.getElementById('noticeOverlay');
+            const closeBtn = document.getElementById('noticeClose');
+            const acceptBtn = document.getElementById('noticeAccept');
+
+            if (!overlay) return;
+
+            // URL-Parameter ?reset-notice → Popup neu zeigen
+            if (window.location.search.includes('reset-notice')) {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+
+            // Nicht anzeigen, wenn bereits geschlossen
+            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+                return;
+            }
+
+            // Popup nach kurzer Verzögerung öffnen
+            setTimeout(() => {
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }, 400);
+
+            function closeNotice() {
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                localStorage.setItem(STORAGE_KEY, 'true');
+            }
+
+            closeBtn.addEventListener('click', closeNotice);
+            acceptBtn.addEventListener('click', closeNotice);
+
+            // Klick außerhalb schließt das Popup
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeNotice();
+                }
+            });
+
+            // ESC schließt das Popup
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeNotice();
+                }
+            });
         })();
     </script>
 
