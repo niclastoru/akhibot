@@ -78,6 +78,21 @@
             30% { transform: translateY(-6px); opacity: 1; }
         }
 
+        @keyframes fabPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4), 0 0 0 0 rgba(88, 101, 242, 0.7); }
+            50% { box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4), 0 0 0 15px rgba(88, 101, 242, 0); }
+        }
+
+        @keyframes pingPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        @keyframes widgetSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         /* ========== NAVIGATION ========== */
         .navbar {
             position: fixed;
@@ -411,18 +426,12 @@
 
         .center-btn { text-align: center; }
 
-        /* ========== AI CHAT ========== */
+        /* ========== AI CHAT (versteckter Section für SEO) ========== */
         .ai-chat {
-            padding: 5rem 6%;
-            background: var(--darker);
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: none;
         }
 
-        .chat-wrapper {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
+        /* ========== CHAT UI (geteilt) ========== */
         .chat-box {
             background: #313338;
             border-radius: 20px;
@@ -655,6 +664,140 @@
             transform: none;
         }
 
+        /* ========== FLOATING CHAT BUTTON (FAB) ========== */
+        .chat-fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5865F2, #1DB954);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4), 0 0 0 0 rgba(88, 101, 242, 0.7);
+            z-index: 9998;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 0;
+            font-family: inherit;
+            animation: fabPulse 2.5s infinite;
+        }
+
+        .chat-fab:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
+        }
+
+        .chat-fab:focus-visible {
+            outline: 2px solid var(--white);
+            outline-offset: 3px;
+        }
+
+        .chat-fab:active {
+            transform: scale(0.95);
+        }
+
+        .chat-fab-icon {
+            font-size: 1.7rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .chat-fab-ping {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ED4245;
+            border: 2px solid #0F0F0F;
+            display: none;
+        }
+
+        .chat-fab-ping.active {
+            display: block;
+            animation: pingPulse 1.5s infinite;
+        }
+
+        /* ========== CHAT WIDGET OVERLAY ========== */
+        .chat-widget-overlay {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            pointer-events: none;
+        }
+
+        .chat-widget-overlay.active {
+            display: flex;
+            pointer-events: auto;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .chat-widget {
+            width: 100%;
+            max-width: 420px;
+            height: 600px;
+            max-height: calc(100vh - 3rem);
+            background: #313338;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: widgetSlideIn 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .chat-widget-header {
+            background: #2B2D31;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .chat-widget-close {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #AAAAAA;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .chat-widget-close:hover {
+            background: rgba(237, 66, 69, 0.15);
+            border-color: #ED4245;
+            color: #ED4245;
+            transform: rotate(90deg);
+        }
+
         /* ========== FOOTER ========== */
         .footer {
             padding: 2.5rem 6%;
@@ -718,10 +861,6 @@
             .stat-number { font-size: 1.8rem; }
             .footer-content { flex-direction: column; text-align: center; }
             .footer-links { justify-content: center; }
-
-            .ai-chat { padding: 4rem 5%; }
-            .chat-box { height: 500px; border-radius: 16px; }
-            .chat-messages { padding: 1rem; }
         }
 
         @media (max-width: 480px) {
@@ -731,9 +870,33 @@
             .btn { width: 100%; }
             .hero-badge { font-size: 0.75rem; padding: 0.35rem 1rem; }
 
-            .chat-box { height: 480px; border-radius: 14px; }
             .msg-text { font-size: 0.88rem; }
             .chat-avatar, .msg-avatar { width: 32px; height: 32px; font-size: 0.9rem; }
+
+            .chat-fab {
+                width: 54px;
+                height: 54px;
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .chat-fab-icon {
+                font-size: 1.5rem;
+            }
+
+            .chat-widget-overlay {
+                padding: 0;
+                align-items: flex-end;
+                justify-content: center;
+            }
+
+            .chat-widget {
+                width: 100%;
+                max-width: 100%;
+                height: calc(100vh - 1rem);
+                max-height: calc(100vh - 1rem);
+                border-radius: 20px 20px 0 0;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1080,13 +1243,8 @@
         </div>
     </section>
 
-    <!-- ========== AI CHAT ========== -->
-    <section class="ai-chat" id="aiChat">
-        <div class="section-title">
-            <h2>Ask Akhi AI</h2>
-            <p>Have questions? Our AI assistant has answers.</p>
-        </div>
-
+    <!-- ========== HIDDEN AI CHAT SECTION (für SEO, wird vom Widget genutzt) ========== -->
+    <section class="ai-chat" id="aiChat" aria-hidden="true">
         <div class="chat-wrapper">
             <div class="chat-box">
                 <div class="chat-header">
@@ -1107,23 +1265,14 @@
                         <div class="msg-avatar">🤖</div>
                         <div class="msg-content">
                             <span class="msg-author bot">Akhi AI</span>
-                            <div class="msg-text">Hey! 👋 I'm Akhi's AI assistant. Ask me anything about the bot – commands, features, setup, or pricing!</div>
+                            <div class="msg-text">Hey! 👋 I'm Akhi's AI assistant. Ask me anything about the bot.</div>
                         </div>
                     </div>
                 </div>
 
                 <form class="chat-input-form" id="chatForm">
-                    <input
-                        type="text"
-                        id="chatInput"
-                        class="chat-input"
-                        placeholder="Ask me anything..."
-                        autocomplete="off"
-                        maxlength="500"
-                    >
-                    <button type="submit" class="chat-send" id="chatSend" title="Send" aria-label="Send message">
-                        ➤
-                    </button>
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything..." autocomplete="off" maxlength="500">
+                    <button type="submit" class="chat-send" id="chatSend" title="Send" aria-label="Send message">➤</button>
                 </form>
             </div>
         </div>
@@ -1141,6 +1290,45 @@
             <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
         </div>
     </footer>
+
+    <!-- ========== FLOATING CHAT BUTTON ========== -->
+    <button class="chat-fab" id="chatFab" type="button" aria-label="Open chat">
+        <span class="chat-fab-icon">💬</span>
+        <span class="chat-fab-ping"></span>
+    </button>
+
+    <!-- ========== CHAT WIDGET ========== -->
+    <div class="chat-widget-overlay" id="chatWidgetOverlay" aria-hidden="true">
+        <div class="chat-widget" id="chatWidget">
+            <div class="chat-widget-header">
+                <div class="chat-header-left">
+                    <div class="chat-avatar">🤖</div>
+                    <div>
+                        <div class="chat-name">Akhi AI</div>
+                        <div class="chat-status" id="chatStatusWidget">
+                            <span class="status-dot"></span> Online
+                        </div>
+                    </div>
+                </div>
+                <button class="chat-widget-close" id="chatWidgetClose" aria-label="Close" type="button">✕</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessagesWidget">
+                <div class="chat-msg bot">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-content">
+                        <span class="msg-author bot">Akhi AI</span>
+                        <div class="msg-text">Hey! 👋 I'm Akhi's AI assistant. Ask me anything about the bot – commands, features, setup, or pricing!</div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-input-form" id="chatFormWidget">
+                <input type="text" id="chatInputWidget" class="chat-input" placeholder="Ask me anything..." autocomplete="off" maxlength="500">
+                <button type="submit" class="chat-send" id="chatSendWidget" title="Send" aria-label="Send message">➤</button>
+            </form>
+        </div>
+    </div>
 
     <!-- ========== SERVICE NOTICE POPUP ========== -->
     <div class="notice-overlay" id="noticeOverlay" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" aria-hidden="true">
@@ -1238,16 +1426,32 @@
             });
         })();
 
-        // ========== AI CHAT ==========
+        // ========== AI CHAT (FAB + WIDGET) ==========
         (function () {
-            var form = document.getElementById('chatForm');
-            var input = document.getElementById('chatInput');
-            var send = document.getElementById('chatSend');
-            var messagesEl = document.getElementById('chatMessages');
-            var clearBtn = document.getElementById('chatClear');
-            var statusEl = document.getElementById('chatStatus');
+            var formOld = document.getElementById('chatForm');
+            var inputOld = document.getElementById('chatInput');
+            var sendOld = document.getElementById('chatSend');
+            var messagesOld = document.getElementById('chatMessages');
+            var statusOld = document.getElementById('chatStatus');
 
-            if (!form || !input || !messagesEl) return;
+            var formNew = document.getElementById('chatFormWidget');
+            var inputNew = document.getElementById('chatInputWidget');
+            var sendNew = document.getElementById('chatSendWidget');
+            var messagesNew = document.getElementById('chatMessagesWidget');
+            var statusNew = document.getElementById('chatStatusWidget');
+
+            var fab = document.getElementById('chatFab');
+            var overlay = document.getElementById('chatWidgetOverlay');
+            var closeWidgetBtn = document.getElementById('chatWidgetClose');
+            var fabPing = fab ? fab.querySelector('.chat-fab-ping') : null;
+
+            if (!formNew || !inputNew || !messagesNew) return;
+
+            var activeForm = formNew;
+            var activeInput = inputNew;
+            var activeSend = sendNew;
+            var activeMessages = messagesNew;
+            var activeStatus = statusNew;
 
             var history = [];
             var isSending = false;
@@ -1276,7 +1480,7 @@
             }
 
             function scrollToBottom() {
-                messagesEl.scrollTop = messagesEl.scrollHeight;
+                activeMessages.scrollTop = activeMessages.scrollHeight;
             }
 
             function addMessage(role, text) {
@@ -1293,7 +1497,7 @@
                         '<div class="msg-text">' + formatMessage(text) + '</div>' +
                     '</div>';
 
-                messagesEl.appendChild(msg);
+                activeMessages.appendChild(msg);
                 scrollToBottom();
             }
 
@@ -1307,7 +1511,7 @@
                         '<span class="msg-author bot">Akhi AI</span>' +
                         '<div class="typing-indicator"><span></span><span></span><span></span></div>' +
                     '</div>';
-                messagesEl.appendChild(msg);
+                activeMessages.appendChild(msg);
                 scrollToBottom();
             }
 
@@ -1317,15 +1521,17 @@
             }
 
             function setStatus(online) {
-                if (!statusEl) return;
-                statusEl.innerHTML = '<span class="status-dot' + (online ? '' : ' offline') + '"></span> ' +
-                                     (online ? 'Online' : 'Offline');
+                [statusOld, statusNew].forEach(function (el) {
+                    if (!el) return;
+                    el.innerHTML = '<span class="status-dot' + (online ? '' : ' offline') + '"></span> ' +
+                                   (online ? 'Online' : 'Offline');
+                });
             }
 
             function setSending(state) {
                 isSending = state;
-                if (send) send.disabled = state;
-                if (input) input.disabled = state;
+                if (activeSend) activeSend.disabled = state;
+                if (activeInput) activeInput.disabled = state;
             }
 
             function fallbackReply(userMsg) {
@@ -1356,7 +1562,7 @@
                 addMessage('user', text);
                 history.push({ role: 'user', content: text });
 
-                input.value = '';
+                activeInput.value = '';
                 setSending(true);
                 addTyping();
 
@@ -1374,7 +1580,15 @@
                         history: history.slice(-6)
                     })
                 })
-                .then(function (res) { return res.json(); })
+                .then(function (res) {
+                    if (res.status === 429) {
+                        return res.json().then(function (data) {
+                            data.rateLimited = true;
+                            return data;
+                        });
+                    }
+                    return res.json();
+                })
                 .then(function (data) {
                     clearTimeout(timeoutId);
                     removeTyping();
@@ -1383,6 +1597,9 @@
                     if (data && data.reply) {
                         reply = data.reply;
                         setStatus(true);
+                    } else if (data && data.rateLimited) {
+                        reply = '⏱️ You\'re sending messages too fast! Please wait a few minutes before trying again.';
+                        setStatus(false);
                     } else {
                         reply = fallbackReply(text);
                         setStatus(false);
@@ -1402,17 +1619,100 @@
                 });
             }
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                sendMessage(input.value);
+            [formOld, formNew].forEach(function (f) {
+                if (!f) return;
+                f.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var inp = f.querySelector('input');
+                    if (inp) {
+                        if (f === formNew) {
+                            activeForm = formNew;
+                            activeInput = inputNew;
+                            activeSend = sendNew;
+                            activeMessages = messagesNew;
+                            activeStatus = statusNew;
+                        } else {
+                            activeForm = formOld;
+                            activeInput = inputOld;
+                            activeSend = sendOld;
+                            activeMessages = messagesOld;
+                            activeStatus = statusOld;
+                        }
+                        sendMessage(inp.value);
+                    }
+                });
             });
 
+            var clearBtn = document.getElementById('chatClear');
             if (clearBtn) {
                 clearBtn.addEventListener('click', function () {
                     if (!confirm('Clear chat history?')) return;
-                    messagesEl.innerHTML = '';
+                    messagesOld.innerHTML = '';
                     history = [];
-                    addMessage('bot', 'Chat cleared! 👋 How can I help you?');
+                    var msg = document.createElement('div');
+                    msg.className = 'chat-msg bot';
+                    msg.innerHTML = '<div class="msg-avatar">🤖</div><div class="msg-content"><span class="msg-author bot">Akhi AI</span><div class="msg-text">Chat cleared! 👋 How can I help you?</div></div>';
+                    messagesOld.appendChild(msg);
+                });
+            }
+
+            function openWidget() {
+                if (!overlay) return;
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                try { document.body.style.overflow = 'hidden'; } catch (e) {}
+
+                if (fabPing) fabPing.classList.remove('active');
+                if (fab) {
+                    fab.style.opacity = '0';
+                    fab.style.pointerEvents = 'none';
+                }
+
+                setTimeout(function () {
+                    if (inputNew) inputNew.focus();
+                }, 300);
+            }
+
+            function closeWidgetFunc() {
+                if (!overlay) return;
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+                try { document.body.style.overflow = ''; } catch (e) {}
+
+                if (fab) {
+                    fab.style.opacity = '1';
+                    fab.style.pointerEvents = 'auto';
+                }
+            }
+
+            if (fab) fab.addEventListener('click', openWidget);
+            if (closeWidgetBtn) closeWidgetBtn.addEventListener('click', closeWidgetFunc);
+
+            if (overlay) {
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === overlay) closeWidgetFunc();
+                });
+            }
+
+            document.addEventListener('keydown', function (e) {
+                if ((e.key === 'Escape' || e.key === 'Esc') && overlay && overlay.classList.contains('active')) {
+                    closeWidgetFunc();
+                }
+            });
+
+            if (fabPing) {
+                setTimeout(function () {
+                    if (!overlay.classList.contains('active')) {
+                        fabPing.classList.add('active');
+                    }
+                }, 5000);
+            }
+
+            var openChatNav = document.getElementById('openChatNav');
+            if (openChatNav) {
+                openChatNav.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    openWidget();
                 });
             }
 
