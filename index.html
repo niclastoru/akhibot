@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0A0A0A">
     <title>Akhi Bot – Next Gen Discord Bot</title>
     <style>
         /* ========== MODERN RESET ========== */
@@ -35,6 +37,7 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
@@ -45,6 +48,8 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
         }
 
         /* ========== CUSTOM SCROLLBAR ========== */
@@ -85,14 +90,16 @@
             }
         }
 
-        .animate {
+        @keyframes noticePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        /* Wichtig: .animate startet nur wenn JS läuft */
+        .js-enabled .animate {
             animation: fadeUp 0.6s ease forwards;
             opacity: 0;
         }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
 
         /* ========== NAVIGATION ========== */
         .navbar {
@@ -105,10 +112,17 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             z-index: 1000;
             border-bottom: 1px solid var(--border);
+        }
+
+        /* Nur backdrop-filter wenn unterstützt */
+        @supports ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
+            .navbar {
+                background: rgba(10, 10, 10, 0.85);
+                -webkit-backdrop-filter: blur(12px);
+                backdrop-filter: blur(12px);
+            }
         }
 
         .logo {
@@ -120,6 +134,15 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-decoration: none;
+            color: #A0A0FF;
+        }
+
+        /* Fallback wenn background-clip nicht supported */
+        @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .logo {
+                color: #A0A0FF;
+                -webkit-text-fill-color: #A0A0FF;
+            }
         }
 
         .nav-links {
@@ -158,6 +181,7 @@
         /* ========== HERO ========== */
         .hero {
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             display: flex;
             align-items: center;
             padding: 8rem 6% 4rem;
@@ -172,6 +196,7 @@
             height: 600px;
             background: var(--primary);
             filter: blur(200px);
+            -webkit-filter: blur(200px);
             opacity: 0.12;
             right: -150px;
             top: -100px;
@@ -186,6 +211,7 @@
             height: 500px;
             background: var(--secondary);
             filter: blur(200px);
+            -webkit-filter: blur(200px);
             opacity: 0.08;
             left: -150px;
             bottom: -150px;
@@ -222,6 +248,14 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            color: #FFFFFF;
+        }
+
+        @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .hero h1 {
+                color: #FFFFFF;
+                -webkit-text-fill-color: #FFFFFF;
+            }
         }
 
         .hero p {
@@ -569,26 +603,38 @@
             border-radius: 4px;
         }
 
-        /* ========== SERVICE NOTICE POPUP ========== */
+        /* ========== SERVICE NOTICE POPUP (iOS-SAFE) ========== */
         .notice-overlay {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
             z-index: 9999;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
         }
 
         .notice-overlay.active {
-            opacity: 1;
-            visibility: visible;
+            display: flex;
+        }
+
+        /* Backdrop-Filter NUR wenn sicher unterstützt (nicht iOS) */
+        @supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+            @media not all and (pointer: coarse) {
+                .notice-overlay {
+                    background: rgba(0, 0, 0, 0.75);
+                    -webkit-backdrop-filter: blur(8px);
+                    backdrop-filter: blur(8px);
+                }
+            }
         }
 
         .notice-modal {
@@ -598,19 +644,14 @@
             padding: 3rem 2.5rem 2.5rem;
             max-width: 520px;
             width: 100%;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             position: relative;
             text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(88, 101, 242, 0.15);
-            transform: translateY(20px) scale(0.97);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.35s ease;
-        }
-
-        .notice-overlay.active .notice-modal {
-            transform: translateY(0) scale(1);
-            opacity: 1;
+            margin: auto;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: fadeUp 0.35s ease;
         }
 
         .notice-close {
@@ -632,6 +673,8 @@
             transition: all 0.2s ease;
             font-family: inherit;
             padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .notice-close:hover {
@@ -652,11 +695,6 @@
             line-height: 1;
             margin-bottom: 1.2rem;
             animation: noticePulse 2.5s ease-in-out infinite;
-        }
-
-        @keyframes noticePulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.08); opacity: 0.9; }
         }
 
         .notice-title {
@@ -724,7 +762,14 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.3px;
+            color: #A0A0FF;
+        }
+
+        @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .notice-owner-name {
+                color: #A0A0FF;
+                -webkit-text-fill-color: #A0A0FF;
+            }
         }
 
         .notice-actions {
@@ -748,6 +793,8 @@
             border: none;
             font-family: inherit;
             min-width: 120px;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .notice-btn-primary {
@@ -805,11 +852,11 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .notice-overlay,
-            .notice-modal,
             .notice-icon {
                 animation: none !important;
-                transition-duration: 0.01ms !important;
+            }
+            .notice-modal {
+                animation: none !important;
             }
         }
     </style>
@@ -965,7 +1012,7 @@
     <!-- ========== SERVICE NOTICE POPUP ========== -->
     <div class="notice-overlay" id="noticeOverlay" role="dialog" aria-modal="true" aria-labelledby="noticeTitle" aria-hidden="true">
         <div class="notice-modal" id="noticeModal">
-            <button class="notice-close" id="noticeClose" aria-label="Close notice" title="Close">✕</button>
+            <button class="notice-close" id="noticeClose" aria-label="Close notice" title="Close" type="button">✕</button>
 
             <span class="notice-icon">🔧</span>
 
@@ -993,70 +1040,151 @@
     </div>
 
     <script>
+    (function () {
+        'use strict';
+
+        // ========== SAFE STORAGE WRAPPER ==========
+        // Verhindert Crash im privaten Modus / bei blockierten Cookies
+        var storage = {
+            get: function (key) {
+                try {
+                    return window.localStorage ? window.localStorage.getItem(key) : null;
+                } catch (e) {
+                    return null;
+                }
+            },
+            set: function (key, value) {
+                try {
+                    if (window.localStorage) window.localStorage.setItem(key, value);
+                } catch (e) { /* ignore */ }
+            },
+            remove: function (key) {
+                try {
+                    if (window.localStorage) window.localStorage.removeItem(key);
+                } catch (e) { /* ignore */ }
+            }
+        };
+
+        // ========== SAFE CLASS LIST HELPER ==========
+        function addClass(el, cls) {
+            if (!el) return;
+            if (el.classList) el.classList.add(cls);
+            else el.className += ' ' + cls;
+        }
+        function removeClass(el, cls) {
+            if (!el) return;
+            if (el.classList) el.classList.remove(cls);
+            else el.className = el.className.replace(new RegExp('(^|\\s)' + cls + '(\\s|$)'), ' ');
+        }
+        function hasClass(el, cls) {
+            if (!el) return false;
+            if (el.classList) return el.classList.contains(cls);
+            return new RegExp('(^|\\s)' + cls + '(\\s|$)').test(el.className);
+        }
+
+        // ========== JS-ENABLED FLAG ==========
+        addClass(document.documentElement, 'js-enabled');
+
+        // ========== FEATURE / COMMAND ANIMATIONS ==========
         (function () {
-            /* ========== FEATURE / COMMAND ANIMATIONS ========== */
-            const cards = document.querySelectorAll('.feature-card, .command-category');
+            var cards = document.querySelectorAll('.feature-card, .command-category');
+            if (!cards.length) return;
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+            // Fallback: alles sichtbar machen wenn IntersectionObserver fehlt
+            if (!('IntersectionObserver' in window)) {
+                for (var i = 0; i < cards.length; i++) {
+                    cards[i].style.opacity = '1';
+                }
+                return;
+            }
 
-            cards.forEach(card => observer.observe(card));
+            try {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            addClass(entry.target, 'animate');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
-            /* ========== SERVICE NOTICE POPUP ========== */
-            const STORAGE_KEY = 'akhi_notice_seen_v1';
-            const overlay = document.getElementById('noticeOverlay');
-            const closeBtn = document.getElementById('noticeClose');
-            const acceptBtn = document.getElementById('noticeAccept');
+                for (var j = 0; j < cards.length; j++) {
+                    observer.observe(cards[j]);
+                }
+            } catch (e) {
+                // Fallback bei Fehler
+                for (var k = 0; k < cards.length; k++) {
+                    cards[k].style.opacity = '1';
+                }
+            }
+        })();
+
+        // ========== SERVICE NOTICE POPUP ==========
+        (function () {
+            var STORAGE_KEY = 'akhi_notice_seen_v2';
+            var overlay = document.getElementById('noticeOverlay');
+            var closeBtn = document.getElementById('noticeClose');
+            var acceptBtn = document.getElementById('noticeAccept');
 
             if (!overlay) return;
 
             // URL-Parameter ?reset-notice → Popup neu zeigen
-            if (window.location.search.includes('reset-notice')) {
-                localStorage.removeItem(STORAGE_KEY);
+            if (window.location.search && window.location.search.indexOf('reset-notice') !== -1) {
+                storage.remove(STORAGE_KEY);
             }
 
             // Nicht anzeigen, wenn bereits geschlossen
-            if (localStorage.getItem(STORAGE_KEY) === 'true') {
+            var alreadySeen = storage.get(STORAGE_KEY) === 'true';
+            if (alreadySeen) {
                 return;
             }
 
-            // Popup nach kurzer Verzögerung öffnen
-            setTimeout(() => {
-                overlay.classList.add('active');
+            // Popup sanft öffnen
+            function openNotice() {
+                addClass(overlay, 'active');
                 overlay.setAttribute('aria-hidden', 'false');
-                document.body.style.overflow = 'hidden';
-            }, 400);
-
-            function closeNotice() {
-                overlay.classList.remove('active');
-                overlay.setAttribute('aria-hidden', 'true');
-                document.body.style.overflow = '';
-                localStorage.setItem(STORAGE_KEY, 'true');
+                // Nur Body-Scroll sperren wenn möglich
+                try {
+                    document.body.style.overflow = 'hidden';
+                } catch (e) {}
             }
 
-            closeBtn.addEventListener('click', closeNotice);
-            acceptBtn.addEventListener('click', closeNotice);
+            function closeNotice() {
+                removeClass(overlay, 'active');
+                overlay.setAttribute('aria-hidden', 'true');
+                try {
+                    document.body.style.overflow = '';
+                } catch (e) {}
+                storage.set(STORAGE_KEY, 'true');
+            }
 
-            // Klick außerhalb schließt das Popup
-            overlay.addEventListener('click', (e) => {
+            // Popup nach kurzer Verzögerung öffnen (nach DOM-Ready)
+            setTimeout(openNotice, 600);
+
+            // Event Listener
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeNotice);
+            }
+            if (acceptBtn) {
+                acceptBtn.addEventListener('click', closeNotice);
+            }
+
+            // Klick außerhalb
+            overlay.addEventListener('click', function (e) {
                 if (e.target === overlay) {
                     closeNotice();
                 }
             });
 
-            // ESC schließt das Popup
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            // ESC schließt
+            document.addEventListener('keydown', function (e) {
+                if ((e.key === 'Escape' || e.key === 'Esc') && hasClass(overlay, 'active')) {
                     closeNotice();
                 }
             });
         })();
+
+    })();
     </script>
 
 </body>
