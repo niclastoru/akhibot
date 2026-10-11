@@ -8,11 +8,12 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-    // CORS-Header
+    // ========== CORS-HEADER ==========
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+    // ========== METHOD CHECK ==========
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -25,7 +26,11 @@ export default async function handler(req, res) {
     let body = req.body;
 
     if (typeof body === 'string') {
-        try { body = JSON.parse(body); } catch (e) { body = {}; }
+        try {
+            body = JSON.parse(body);
+        } catch (e) {
+            body = {};
+        }
     }
 
     if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
@@ -33,8 +38,11 @@ export default async function handler(req, res) {
             let data = '';
             req.on('data', function (chunk) { data += chunk; });
             req.on('end', function () {
-                try { resolve(JSON.parse(data)); }
-                catch (e) { resolve({}); }
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    resolve({});
+                }
             });
             req.on('error', function () { resolve({}); });
         });
@@ -43,6 +51,7 @@ export default async function handler(req, res) {
     const message = body && body.message;
     const history = body && body.history;
 
+    // ========== VALIDATION ==========
     if (!message || typeof message !== 'string') {
         return res.status(400).json({ error: 'Message required' });
     }
@@ -51,6 +60,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Message too long (max 500 chars)' });
     }
 
+    // ========== API KEY ==========
     const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -61,22 +71,25 @@ export default async function handler(req, res) {
         });
     }
 
+    // ========== SYSTEM PROMPT ==========
     const systemPrompt = 'You are Akhi Bot, a friendly and helpful Discord bot assistant for the website akhibot.com.\n\n' +
         'About Akhi Bot:\n' +
         '- 180+ commands across 17 categories\n' +
         '- Features: Moderation, Leveling, Music, Economy, Games, VoiceMaster, Giveaways, Logging, Booster roles, Team management\n' +
         '- Owner and Developer: Baris Al Kurdi\n' +
-        '- Currently UNDER MAINTENANCE - the bot is temporarily unavailable due to technical issues but will come back soon\n' +
+        '- Currently UNDER MAINTENANCE - the bot is temporarily unavailable due to technical issues but will come back soon, better and more stable than ever\n' +
         '- Free to use, with optional Premium tier\n\n' +
         'Your job:\n' +
         '- Answer questions about Akhi Bot clearly and friendly\n' +
         '- If asked about commands, list the relevant ones\n' +
+        '- If asked something unrelated, politely redirect to Akhi Bot topics\n' +
         '- Keep responses SHORT (max 3 sentences unless asked for details)\n' +
-        '- Use a casual, friendly tone\n' +
-        '- If asked about the bot being offline, mention it is under maintenance\n' +
+        '- Use a casual, friendly tone - like a Discord bot would\n' +
+        '- If asked about the bot being offline, mention it is under maintenance and coming back soon\n' +
         '- Never make up features that do not exist\n' +
         '- You can use emojis occasionally';
 
+    // ========== MESSAGE HISTORY ==========
     const messages = [{ role: 'system', content: systemPrompt }];
 
     if (Array.isArray(history)) {
@@ -92,12 +105,17 @@ export default async function handler(req, res) {
 
     messages.push({ role: 'user', content: message });
 
+    // ========== AI REQUEST ==========
     try {
         const useGroq = !!process.env.GROQ_API_KEY;
         const endpoint = useGroq
             ? 'https://api.groq.com/openai/v1/chat/completions'
             : 'https://api.openai.com/v1/chat/completions';
-        const model = useGroq ? 'llama-3.1-8b-instant' : 'gpt-4o-mini';
+
+        // ========== MODELL-NAME (korrigiert!) ==========
+        // Groq: llama-3.3-70b-versatile (aktuell gültig)
+        // OpenAI: gpt-4o-mini
+        const model = useGroq ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
 
         const aiRes = await fetch(endpoint, {
             method: 'POST',
@@ -113,9 +131,42 @@ export default async function handler(req, res) {
             })
         });
 
+        // ========== AI ERROR HANDLING ==========
         if (!aiRes.ok) {
             const errText = await aiRes.text();
             console.error('AI API error:', aiRes.status, errText);
+
+            // Wenn Modell nicht existiert → Fallback auf anderes Modell
+            if (aiRes.status === 404 && useGroq) {
+                console.log('Trying fallback model: llama-3.1-8b-instant');
+
+                const fallbackRes = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + apiKey
+                    },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-8b-instant',
+                        messages: messages,
+                        max_tokens: 250,
+                        temperature: 0.7
+                    })
+                });
+
+                if (fallbackRes.ok) {
+                    const fallbackData = await fallbackRes.json();
+                    const fallbackReply = fallbackData && fallbackData.choices && fallbackData.choices[0] &&
+                                          fallbackData.choices[0].message && fallbackData.choices[0].message.content
+                                          ? String(fallbackData.choices[0].message.content).trim()
+                                          : null;
+
+                    if (fallbackReply) {
+                        return res.status(200).json({ reply: fallbackReply });
+                    }
+                }
+            }
+
             return res.status(500).json({
                 error: 'AI service error',
                 fallback: true,
@@ -123,9 +174,9 @@ export default async function handler(req, res) {
             });
         }
 
+        // ========== RESPONSE PARSEN ==========
         const data = await aiRes.json();
 
-        // Klassisches Property-Checking statt Optional Chaining
         const reply = data && data.choices && data.choices[0] &&
                       data.choices[0].message && data.choices[0].message.content
                       ? String(data.choices[0].message.content).trim()
