@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0A0A0A">
     <title>Commands – Akhi Bot</title>
     <style>
         /* ========== MODERN RESET ========== */
@@ -16,44 +18,60 @@
             --primary: #5865F2;
             --primary-dark: #4752C4;
             --secondary: #1DB954;
-            --dark: #0F0F0F;
-            --darker: #0A0A0A;
-            --light: #FFFFFF;
+            --warning: #FEE75C;
+            --danger: #ED4245;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --light: #EDEDED;
+            --white: #FFFFFF;
             --gray: #888888;
             --gray-light: #AAAAAA;
-            --card-bg: #1A1A1A;
+            --gray-dim: #666666;
+            --card-bg: #0F0F0F;
             --border: rgba(255, 255, 255, 0.05);
             --border-hover: rgba(255, 255, 255, 0.15);
-            --gradient: linear-gradient(135deg, #5865F2 0%, #1DB954 100%);
+            --gradient-text: linear-gradient(125deg, #FFFFFF, #8888FF);
+            --gradient-logo: linear-gradient(110deg, #FFFFFF, #A0A0FF);
+            --gradient-page: linear-gradient(135deg, #5865F2 0%, #1DB954 100%);
         }
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--dark);
             color: var(--light);
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
         }
 
         /* ========== CUSTOM SCROLLBAR ========== */
-        ::-webkit-scrollbar {
-            width: 8px;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--darker); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        ::-webkit-scrollbar-track {
-            background: var(--darker);
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+
+        @keyframes noticePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.9; }
         }
 
         /* ========== NAVIGATION ========== */
@@ -62,64 +80,73 @@
             top: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 1.2rem 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.98);
             z-index: 1000;
             border-bottom: 1px solid var(--border);
         }
 
+        @supports ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
+            .navbar {
+                background: rgba(10, 10, 10, 0.85);
+                -webkit-backdrop-filter: blur(12px);
+                backdrop-filter: blur(12px);
+            }
+        }
+
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: var(--gradient);
+            letter-spacing: -0.5px;
+            background: var(--gradient-logo);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-decoration: none;
+            color: #A0A0FF;
+        }
+
+        @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .logo { color: #A0A0FF; -webkit-text-fill-color: #A0A0FF; }
         }
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2.2rem;
             align-items: center;
             list-style: none;
         }
 
         .nav-links a {
-            color: var(--light);
+            color: #CCCCCC;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
         }
 
-        .nav-links a:hover {
-            color: var(--primary);
-        }
+        .nav-links a:hover { color: var(--white); }
 
         .nav-btn {
-            background: var(--primary);
-            color: var(--light) !important;
-            padding: 0.7rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
+            background: var(--white);
+            color: var(--dark) !important;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .nav-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+            background: #DDDDDD;
+            transform: scale(0.98);
         }
 
         /* ========== PAGE HEADER ========== */
         .page-header {
-            padding: 9rem 5% 3rem;
+            padding: 9rem 6% 3rem;
             text-align: center;
             background: linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(29, 185, 84, 0.1) 100%);
             position: relative;
@@ -133,6 +160,7 @@
             height: 500px;
             background: var(--primary);
             filter: blur(200px);
+            -webkit-filter: blur(200px);
             opacity: 0.15;
             right: -150px;
             top: -150px;
@@ -147,6 +175,7 @@
             height: 400px;
             background: var(--secondary);
             filter: blur(200px);
+            -webkit-filter: blur(200px);
             opacity: 0.1;
             left: -150px;
             bottom: -150px;
@@ -162,12 +191,17 @@
         .page-header h1 {
             font-size: 3.5rem;
             font-weight: 800;
-            background: var(--gradient);
+            background: var(--gradient-page);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
             letter-spacing: -1px;
+            color: #A0A0FF;
+        }
+
+        @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .page-header h1 { color: #A0A0FF; -webkit-text-fill-color: #A0A0FF; }
         }
 
         .page-header p {
@@ -211,7 +245,7 @@
         .content-section {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 5% 5rem;
+            padding: 3rem 6% 5rem;
         }
 
         /* ========== SEARCH BOX ========== */
@@ -226,7 +260,7 @@
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50px;
-            color: var(--light);
+            color: var(--white);
             font-size: 1rem;
             font-family: inherit;
             outline: none;
@@ -251,7 +285,7 @@
 
         .category-card {
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: 20px;
             border: 1px solid var(--border);
             overflow: hidden;
             transition: all 0.3s ease;
@@ -352,9 +386,9 @@
 
         /* ========== FOOTER ========== */
         .footer {
+            padding: 2.5rem 6%;
             background: var(--darker);
-            padding: 3rem 5%;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .footer-content {
@@ -362,7 +396,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .footer-links {
@@ -372,36 +406,15 @@
         }
 
         .footer-links a {
-            color: var(--gray);
+            color: #777777;
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
         }
 
-        .footer-links a:hover {
-            color: var(--primary);
-        }
+        .footer-links a:hover { color: var(--white); }
 
-        .footer-copyright {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        /* ========== ANIMATIONS ========== */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate {
-            animation: fadeUp 0.6s ease forwards;
-            opacity: 0;
-        }
+        .footer-copyright { color: #555555; font-size: 0.8rem; }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
@@ -494,7 +507,7 @@
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">🤖 Akhi Bot</a>
+        <a href="index.html" class="logo">akhi bot</a>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="commands.html">Commands</a>
@@ -725,8 +738,8 @@
                     <div class="command-item"><span class="command-name">serverrules</span><span class="command-aliases">rules</span><span class="command-desc">Set server rules</span></div>
                     <div class="command-item"><span class="command-name">status</span><span class="command-aliases">setstatus</span><span class="command-desc">Change bot status</span></div>
                     <div class="command-item"><span class="command-name">stickymessage</span><span class="command-aliases">sticky</span><span class="command-desc">Set sticky message</span></div>
-                    <div class="command-item"><span class="command-name">stripstaff</span><span class="command-aliases">removestaff</span><span class="command-desc">Remove staff roles="</span></div>
-count                    <div class="command-item"><span"> class="command-name">unban12all</span><span class="command-desc">Unban all users</span></div>
+                    <div class="command-item"><span class="command-name">stripstaff</span><span class="command-aliases">removestaff</span><span class="command-desc">Remove staff roles</span></div>
+                    <div class="command-item"><span class="command-name">unbanall</span><span class="command-desc">Unban all users</span></div>
                     <div class="command-item"><span class="command-name">unjailall</span><span class="command-desc">Release all from jail</span></div>
                     <div class="command-item"><span class="command-name">vanity-url</span><span class="command-aliases">vanity</span><span class="command-desc">Show vanity URL</span></div>
                     <div class="command-item"><span class="command-name">activity</span><span class="command-aliases">act</span><span class="command-desc">Start VC activity</span></div>
@@ -748,7 +761,7 @@ count                    <div class="command-item"><span"> class="command-name">
                 <div class="category-header">
                     <span class="emoji">🌐</span>
                     <h3>Server</h3>
-                    <span class</span>
+                    <span class="count">12</span>
                 </div>
                 <div class="command-list">
                     <div class="command-item"><span class="command-name">autorole</span><span class="command-desc">Set auto-role for new members</span></div>
@@ -778,7 +791,7 @@ count                    <div class="command-item"><span"> class="command-name">
                     <div class="command-item"><span class="command-name">uprank</span><span class="command-aliases">promote</span><span class="command-desc">Promote a user</span></div>
                     <div class="command-item"><span class="command-name">derank</span><span class="command-aliases">demote</span><span class="command-desc">Demote a user</span></div>
                     <div class="command-item"><span class="command-name">uprankinfo</span><span class="command-aliases">upi</span><span class="command-desc">Show promotion history</span></div>
-                    <div class="command-item"><span class="command-name">derankinfo</span><span class="command-aliases">dicommand</span><span class="command-desc">Show demotion history</span></div>
+                    <div class="command-item"><span class="command-name">derankinfo</span><span class="command-aliases">di</span><span class="command-desc">Show demotion history</span></div>
                     <div class="command-item"><span class="command-name">teamlog</span><span class="command-aliases">tlog</span><span class="command-desc">Set team log channel</span></div>
                     <div class="command-item"><span class="command-name">teamlogdisable</span><span class="command-aliases">tlogoff</span><span class="command-desc">Disable team logs</span></div>
                     <div class="command-item"><span class="command-name">teamlogstatus</span><span class="command-aliases">tlogstatus</span><span class="command-desc">Show log settings</span></div>
@@ -823,8 +836,8 @@ count                    <div class="command-item"><span"> class="command-name">
                     <span class="count">15</span>
                 </div>
                 <div class="command-list">
-                    <div class="command-item"><span class="command-name">setupvm</span><span class="command-aliases">voicemaster-d</span><span class="command-descesc">Setup VoiceMaster</span></div>
-                   ">Disable <div class="command-item"><span class="command-name">voicemaster-reset</span><span class="command-aliases">vm-reset</span><span class="command-desc">Reset VoiceMaster</span></div>
+                    <div class="command-item"><span class="command-name">setupvm</span><span class="command-aliases">voicemaster</span><span class="command-desc">Setup VoiceMaster</span></div>
+                    <div class="command-item"><span class="command-name">voicemaster-reset</span><span class="command-aliases">vm-reset</span><span class="command-desc">Reset VoiceMaster</span></div>
                     <div class="command-item"><span class="command-name">voice-lock</span><span class="command-aliases">vlock</span><span class="command-desc">Lock your voice channel</span></div>
                     <div class="command-item"><span class="command-name">voice-unlock</span><span class="command-aliases">vunlock</span><span class="command-desc">Unlock your voice channel</span></div>
                     <div class="command-item"><span class="command-name">voice-hide</span><span class="command-aliases">vhide</span><span class="command-desc">Hide your voice channel</span></div>
@@ -850,7 +863,7 @@ count                    <div class="command-item"><span"> class="command-name">
                 </div>
                 <div class="command-list">
                     <div class="command-item"><span class="command-name">logs</span><span class="command-aliases">log</span><span class="command-desc">Show/set log channels</span></div>
-                    <div class="command-item"><span class="command-name">logs-disable</span><span class="command-aliases">logsoff</span><span class=" logging</span></div>
+                    <div class="command-item"><span class="command-name">logs-disable</span><span class="command-aliases">logsoff</span><span class="command-desc">Disable logging</span></div>
                     <div class="command-item"><span class="command-name">logs-reset</span><span class="command-aliases">logreset</span><span class="command-desc">Reset all log settings</span></div>
                 </div>
             </div>
@@ -922,9 +935,8 @@ count                    <div class="command-item"><span"> class="command-name">
                     <span class="count">7</span>
                 </div>
                 <div class="command-list">
-                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-aliases">jailconfig</span><span class="command-desc">Configure jail system</span></ {
-div>
-                    <div class="command-item"><           span class="command-name"> constsettings-jailmsg</span><span search class="command-aliasesInput">jailmsg</span><span class="command-desc">Set jail message</span></div>
+                    <div class="command-item"><span class="command-name">jail-settings</span><span class="command-aliases">jailconfig</span><span class="command-desc">Configure jail system</span></div>
+                    <div class="command-item"><span class="command-name">settings-jailmsg</span><span class="command-aliases">jailmsg</span><span class="command-desc">Set jail message</span></div>
                     <div class="command-item"><span class="command-name">settings</span><span class="command-aliases">config</span><span class="command-desc">Show all settings</span></div>
                     <div class="command-item"><span class="command-name">settingsstaff</span><span class="command-aliases">sstaff</span><span class="command-desc">Manage staff roles</span></div>
                     <div class="command-item"><span class="command-name">settingsstafflist</span><span class="command-aliases">stafflist</span><span class="command-desc">List staff roles</span></div>
@@ -938,31 +950,34 @@ div>
 
     <footer class="footer">
         <div class="footer-content">
-            <a href="index.html" class="logo">🤖 Akhi Bot</a>
+            <a href="index.html" class="logo" style="font-size: 1.2rem;">akhi bot</a>
             <div class="footer-links">
                 <a href="index.html">Home</a>
                 <a href="commands.html">Commands</a>
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
             </div>
             <div class="footer-copyright">© 2026 Akhi Bot. All rights reserved.</div>
         </div>
     </footer>
 
     <script>
-        (function () = document.getElementById('searchInput');
-            const cards = document.querySelectorAll('.category-card');
+        (function () {
+            var searchInput = document.getElementById('searchInput');
+            var cards = document.querySelectorAll('.category-card');
+
+            if (!searchInput) return;
 
             function filterCommands() {
-                const filter = searchInput.value.toLowerCase().trim();
+                var filter = searchInput.value.toLowerCase().trim();
 
-                cards.forEach(card => {
+                cards.forEach(function (card) {
                     if (!filter) {
                         card.classList.remove('hidden');
                         return;
                     }
-                    const text = card.textContent.toLowerCase();
-                    if (text.includes(filter)) {
+                    var text = card.textContent.toLowerCase();
+                    if (text.indexOf(filter) !== -1) {
                         card.classList.remove('hidden');
                     } else {
                         card.classList.add('hidden');
@@ -970,25 +985,30 @@ div>
                 });
             }
 
-            // Live filtering with debounce for smoothness
-            let timeout;
-            searchInput.addEventListener('input', () => {
+            var timeout;
+            searchInput.addEventListener('input', function () {
                 clearTimeout(timeout);
                 timeout = setTimeout(filterCommands, 80);
             });
 
-            // Fade-in animation for cards on scroll
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
 
-            cards.forEach(card => observer.observe(card));
+                cards.forEach(function (card) { observer.observe(card); });
+            } else {
+                cards.forEach(function (card) {
+                    card.style.opacity = '1';
+                });
+            }
         })();
     </script>
+
 </body>
 </html>
