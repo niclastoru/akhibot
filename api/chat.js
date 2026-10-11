@@ -112,10 +112,10 @@ export default async function handler(req, res) {
             ? 'https://api.groq.com/openai/v1/chat/completions'
             : 'https://api.openai.com/v1/chat/completions';
 
-        // ========== MODELL-NAME (korrigiert!) ==========
-        // Groq: llama-3.3-70b-versatile (aktuell gültig)
+        // ========== MODELL-NAME (korrigiert für deinen Groq-Account) ==========
+        // Groq: openai/gpt-oss-120b (verfügbar in deinem Account)
         // OpenAI: gpt-4o-mini
-        const model = useGroq ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+        const model = useGroq ? 'openai/gpt-oss-120b' : 'gpt-4o-mini';
 
         const aiRes = await fetch(endpoint, {
             method: 'POST',
@@ -136,9 +136,9 @@ export default async function handler(req, res) {
             const errText = await aiRes.text();
             console.error('AI API error:', aiRes.status, errText);
 
-            // Wenn Modell nicht existiert → Fallback auf anderes Modell
+            // Fallback auf kleineres Modell bei 404
             if (aiRes.status === 404 && useGroq) {
-                console.log('Trying fallback model: llama-3.1-8b-instant');
+                console.log('Trying fallback model: openai/gpt-oss-20b');
 
                 const fallbackRes = await fetch(endpoint, {
                     method: 'POST',
@@ -147,7 +147,7 @@ export default async function handler(req, res) {
                         'Authorization': 'Bearer ' + apiKey
                     },
                     body: JSON.stringify({
-                        model: 'llama-3.1-8b-instant',
+                        model: 'openai/gpt-oss-20b',
                         messages: messages,
                         max_tokens: 250,
                         temperature: 0.7
