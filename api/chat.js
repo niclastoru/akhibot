@@ -2,8 +2,13 @@
 // Vercel Serverless Function – Proxy für KI-Chat
 // Verhindert, dass der API-Key im Browser sichtbar ist
 
+export const config = {
+    runtime: 'nodejs',
+    maxDuration: 30
+};
+
 export default async function handler(req, res) {
-    // CORS-Header (nur deine Domain erlauben)
+    // CORS-Header
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,13 +21,32 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { message, history } = req.body || {};
+    // ========== BODY MANUELL PARSEN (Vercel parst es NICHT automatisch) ==========
+    let body = req.body;
+
+    if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (e) { body = {}; }
+    }
+
+    if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
+        body = await new Promise(function (resolve) {
+            let data = '';
+            req.on('data', function (chunk) { data += chunk; });
+            req.on('end', function () {
+                try { resolve(JSON.parse(data)); }
+                catch (e) { resolve({}); }
+            });
+            req.on('error', function () { resolve({}); });
+        });
+    }
+
+    const message = body && body.message;
+    const history = body && body.history;
 
     if (!message || typeof message !== 'string') {
         return res.status(400).json({ error: 'Message required' });
     }
 
-    // Länge begrenzen (Spam-Schutz)
     if (message.length > 500) {
         return res.status(400).json({ error: 'Message too long (max 500 chars)' });
     }
@@ -30,40 +54,33 @@ export default async function handler(req, res) {
     const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
+        console.error('No API key found in environment variables');
         return res.status(500).json({
             error: 'AI service not configured',
             fallback: true
         });
     }
 
-    // System Prompt – hier definierst du die Persönlichkeit von Akhi
-    const systemPrompt = `You are Akhi Bot, a friendly and helpful Discord bot assistant for the website akhibot.com.
+    const systemPrompt = 'You are Akhi Bot, a friendly and helpful Discord bot assistant for the website akhibot.com.\n\n' +
+        'About Akhi Bot:\n' +
+        '- 180+ commands across 17 categories\n' +
+        '- Features: Moderation, Leveling, Music, Economy, Games, VoiceMaster, Giveaways, Logging, Booster roles, Team management\n' +
+        '- Owner and Developer: Baris Al Kurdi\n' +
+        '- Currently UNDER MAINTENANCE - the bot is temporarily unavailable due to technical issues but will come back soon\n' +
+        '- Free to use, with optional Premium tier\n\n' +
+        'Your job:\n' +
+        '- Answer questions about Akhi Bot clearly and friendly\n' +
+        '- If asked about commands, list the relevant ones\n' +
+        '- Keep responses SHORT (max 3 sentences unless asked for details)\n' +
+        '- Use a casual, friendly tone\n' +
+        '- If asked about the bot being offline, mention it is under maintenance\n' +
+        '- Never make up features that do not exist\n' +
+        '- You can use emojis occasionally';
 
-About Akhi Bot:
-- 180+ commands across 17 categories
-- Features: Moderation, Leveling, Music, Economy, Games, VoiceMaster, Giveaways, Logging, Booster roles, Team management
-- Owner and Developer: Barış Al Kurdi
-- Support server and info available on the website
-- Currently UNDER MAINTENANCE – the bot is temporarily unavailable due to technical issues but will come back soon, better and more stable than ever
-- Free to use, with optional Premium tier
-
-Your job:
-- Answer questions about Akhi Bot clearly and friendly
-- If asked about commands, list the relevant ones
-- If asked something unrelated, politely redirect to Akhi Bot topics
-- Keep responses SHORT (max 3 sentences unless asked for details)
-- Use a casual, friendly tone – like a Discord bot would
-- If asked about the bot being offline, mention it's under maintenance and coming back soon
-- Never make up features that don't exist
-- You can use emojis occasionally 🎉`;
-
-    // Nachrichtenverlauf aufbauen (max letzte 6 Nachrichten für Context)
-    const messages = [
-        { role: 'system', content: systemPrompt }
-    ];
+    const messages = [{ role: 'system', content: systemPrompt }];
 
     if (Array.isArray(history)) {
-        history.slice(-6).forEach(item => {
+        history.slice(-6).forEach(function (item) {
             if (item && item.role && item.content && typeof item.content === 'string') {
                 messages.push({
                     role: item.role === 'user' ? 'user' : 'assistant',
@@ -76,7 +93,6 @@ Your job:
     messages.push({ role: 'user', content: message });
 
     try {
-        // Groq API (kostenlos & schnell) – Fallback auf OpenAI wenn nur das da ist
         const useGroq = !!process.env.GROQ_API_KEY;
         const endpoint = useGroq
             ? 'https://api.groq.com/openai/v1/chat/completions'
@@ -87,7 +103,7 @@ Your job:
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Authorization': 'Bearer ' + apiKey
             },
             body: JSON.stringify({
                 model: model,
@@ -102,12 +118,18 @@ Your job:
             console.error('AI API error:', aiRes.status, errText);
             return res.status(500).json({
                 error: 'AI service error',
-                fallback: true
+                fallback: true,
+                status: aiRes.status
             });
         }
 
         const data = await aiRes.json();
-        const reply = data?.choices?.[0]?.message?.content?.trim();
+
+        // Klassisches Property-Checking statt Optional Chaining
+        const reply = data && data.choices && data.choices[0] &&
+                      data.choices[0].message && data.choices[0].message.content
+                      ? String(data.choices[0].message.content).trim()
+                      : null;
 
         if (!reply) {
             return res.status(500).json({ error: 'Empty response', fallback: true });
@@ -116,7 +138,11 @@ Your job:
         return res.status(200).json({ reply: reply });
 
     } catch (err) {
-        console.error('Server error:', err);
-        return res.status(500).json({ error: 'Server error', fallback: true });
+        console.error('Server error:', err && err.message);
+        return res.status(500).json({
+            error: 'Server error',
+            fallback: true,
+            detail: err && err.message
+        });
     }
 }
