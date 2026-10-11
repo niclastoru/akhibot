@@ -1,19 +1,91 @@
 // api/chat.js
-// Vercel Serverless Function – Proxy für KI-Chat
-// Verhindert, dass der API-Key im Browser sichtbar ist
+// Vercel Serverless Function – Proxy für KI-Chat mit Rate Limiting
 
 export const config = {
     runtime: 'nodejs',
     maxDuration: 30
 };
 
+// ========== IN-MEMORY RATE LIMIT STORAGE ==========
+const rateLimitStore = new Map();
+
+const RATE_LIMIT = {
+    maxRequests: 10,
+    windowMs: 60 * 1000,
+    blockDurationMs: 5 * 60 * 1000
+};
+
+function getClientIP(req) {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) {
+        return String(forwarded).split(',')[0].trim();
+    }
+    return req.headers['x-real-ip'] ||
+           (req.socket && req.socket.remoteAddress) ||
+           'unknown';
+}
+
+function checkRateLimit(ip) {
+    const now = Date.now();
+    const record = rateLimitStore.get(ip);
+
+    if (!record) {
+        rateLimitStore.set(ip, {
+            count: 1,
+            firstRequest: now,
+            blockedUntil: 0
+        });
+        return { allowed: true, remaining: RATE_LIMIT.maxRequests - 1 };
+    }
+
+    if (record.blockedUntil > now) {
+        return {
+            allowed: false,
+            blocked: true,
+            retryAfter: Math.ceil((record.blockedUntil - now) / 1000)
+        };
+    }
+
+    if (now - record.firstRequest > RATE_LIMIT.windowMs) {
+        record.count = 1;
+        record.firstRequest = now;
+        record.blockedUntil = 0;
+        rateLimitStore.set(ip, record);
+        return { allowed: true, remaining: RATE_LIMIT.maxRequests - 1 };
+    }
+
+    record.count++;
+
+    if (record.count > RATE_LIMIT.maxRequests) {
+        record.blockedUntil = now + RATE_LIMIT.blockDurationMs;
+        rateLimitStore.set(ip, record);
+        return {
+            allowed: false,
+            blocked: true,
+            retryAfter: Math.ceil(RATE_LIMIT.blockDurationMs / 1000)
+        };
+    }
+
+    rateLimitStore.set(ip, record);
+    return { allowed: true, remaining: RATE_LIMIT.maxRequests - record.count };
+}
+
+setInterval(() => {
+    const now = Date.now();
+    const maxAge = RATE_LIMIT.windowMs * 2;
+    for (const [ip, record] of rateLimitStore.entries()) {
+        if (now - record.firstRequest > maxAge && record.blockedUntil < now) {
+            rateLimitStore.delete(ip);
+        }
+    }
+}, 5 * 60 * 1000);
+
+
 export default async function handler(req, res) {
-    // ========== CORS-HEADER ==========
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // ========== METHOD CHECK ==========
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -22,15 +94,25 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // ========== BODY MANUELL PARSEN (Vercel parst es NICHT automatisch) ==========
+    const clientIP = getClientIP(req);
+    const rateCheck = checkRateLimit(clientIP);
+
+    if (!rateCheck.allowed) {
+        console.warn('Rate limit hit for IP:', clientIP);
+        return res.status(429).json({
+            error: 'Too many requests',
+            message: 'You have sent too many messages. Please wait a few minutes.',
+            retryAfter: rateCheck.retryAfter,
+            fallback: true
+        });
+    }
+
+    res.setHeader('X-RateLimit-Remaining', String(rateCheck.remaining || 0));
+
     let body = req.body;
 
     if (typeof body === 'string') {
-        try {
-            body = JSON.parse(body);
-        } catch (e) {
-            body = {};
-        }
+        try { body = JSON.parse(body); } catch (e) { body = {}; }
     }
 
     if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
@@ -38,11 +120,7 @@ export default async function handler(req, res) {
             let data = '';
             req.on('data', function (chunk) { data += chunk; });
             req.on('end', function () {
-                try {
-                    resolve(JSON.parse(data));
-                } catch (e) {
-                    resolve({});
-                }
+                try { resolve(JSON.parse(data)); } catch (e) { resolve({}); }
             });
             req.on('error', function () { resolve({}); });
         });
@@ -51,7 +129,6 @@ export default async function handler(req, res) {
     const message = body && body.message;
     const history = body && body.history;
 
-    // ========== VALIDATION ==========
     if (!message || typeof message !== 'string') {
         return res.status(400).json({ error: 'Message required' });
     }
@@ -60,7 +137,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Message too long (max 500 chars)' });
     }
 
-    // ========== API KEY ==========
     const apiKey = process.env.GROQ_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -71,7 +147,6 @@ export default async function handler(req, res) {
         });
     }
 
-    // ========== SYSTEM PROMPT ==========
     const systemPrompt = 'You are Akhi Bot, a friendly and helpful Discord bot assistant for the website akhibot.com.\n\n' +
         'About Akhi Bot:\n' +
         '- 180+ commands across 17 categories\n' +
@@ -89,7 +164,6 @@ export default async function handler(req, res) {
         '- Never make up features that do not exist\n' +
         '- You can use emojis occasionally';
 
-    // ========== MESSAGE HISTORY ==========
     const messages = [{ role: 'system', content: systemPrompt }];
 
     if (Array.isArray(history)) {
@@ -105,16 +179,12 @@ export default async function handler(req, res) {
 
     messages.push({ role: 'user', content: message });
 
-    // ========== AI REQUEST ==========
     try {
         const useGroq = !!process.env.GROQ_API_KEY;
         const endpoint = useGroq
             ? 'https://api.groq.com/openai/v1/chat/completions'
             : 'https://api.openai.com/v1/chat/completions';
 
-        // ========== MODELL-NAME (korrigiert für deinen Groq-Account) ==========
-        // Groq: openai/gpt-oss-120b (verfügbar in deinem Account)
-        // OpenAI: gpt-4o-mini
         const model = useGroq ? 'openai/gpt-oss-120b' : 'gpt-4o-mini';
 
         const aiRes = await fetch(endpoint, {
@@ -131,12 +201,10 @@ export default async function handler(req, res) {
             })
         });
 
-        // ========== AI ERROR HANDLING ==========
         if (!aiRes.ok) {
             const errText = await aiRes.text();
             console.error('AI API error:', aiRes.status, errText);
 
-            // Fallback auf kleineres Modell bei 404
             if (aiRes.status === 404 && useGroq) {
                 console.log('Trying fallback model: openai/gpt-oss-20b');
 
@@ -174,7 +242,6 @@ export default async function handler(req, res) {
             });
         }
 
-        // ========== RESPONSE PARSEN ==========
         const data = await aiRes.json();
 
         const reply = data && data.choices && data.choices[0] &&
@@ -186,7 +253,10 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Empty response', fallback: true });
         }
 
-        return res.status(200).json({ reply: reply });
+        return res.status(200).json({
+            reply: reply,
+            remaining: rateCheck.remaining
+        });
 
     } catch (err) {
         console.error('Server error:', err && err.message);
