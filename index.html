@@ -106,6 +106,7 @@
             background: rgba(10, 10, 10, 0.98);
             z-index: 1000;
             border-bottom: 1px solid var(--border);
+            gap: 1rem;
         }
 
         @supports ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
@@ -126,6 +127,7 @@
             -webkit-text-fill-color: transparent;
             text-decoration: none;
             color: #A0A0FF;
+            flex-shrink: 0;
         }
 
         @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
@@ -134,9 +136,10 @@
 
         .nav-links {
             display: flex;
-            gap: 2.2rem;
+            gap: 2rem;
             align-items: center;
             list-style: none;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
@@ -152,7 +155,7 @@
         .nav-btn {
             background: var(--white);
             color: var(--dark) !important;
-            padding: 0.6rem 1.8rem;
+            padding: 0.6rem 1.6rem;
             border-radius: 40px;
             font-weight: 600;
             transition: all 0.2s ease;
@@ -161,6 +164,151 @@
         .nav-btn:hover {
             background: #DDDDDD;
             transform: scale(0.98);
+        }
+
+        /* ========== AUTH / LOGIN ========== */
+        .auth-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-btn {
+            background: #5865F2;
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            -webkit-appearance: none;
+            appearance: none;
+            white-space: nowrap;
+        }
+
+        .auth-btn:hover {
+            background: #4752C4;
+            transform: translateY(-2px);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.35rem 0.9rem 0.35rem 0.35rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            color: #fff;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .user-menu-trigger:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: block;
+            object-fit: cover;
+            background: #1E1F22;
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-menu-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: #0F0F0F;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.4rem;
+            min-width: 220px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 1100;
+        }
+
+        .user-menu-dropdown.active {
+            display: block;
+        }
+
+        .user-menu-header {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 0.4rem;
+        }
+
+        .user-menu-header-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-menu-header-id {
+            color: #666;
+            font-size: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            margin-top: 0.15rem;
+        }
+
+        .user-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem 1rem;
+            color: #CCCCCC;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .user-menu-item:hover {
+            background: rgba(88, 101, 242, 0.15);
+            color: #fff;
+        }
+
+        .user-menu-item.danger:hover {
+            background: rgba(237, 66, 69, 0.15);
+            color: #ED4245;
         }
 
         /* ========== HERO ========== */
@@ -426,10 +574,8 @@
 
         .center-btn { text-align: center; }
 
-        /* ========== AI CHAT (versteckter Section für SEO) ========== */
-        .ai-chat {
-            display: none;
-        }
+        /* ========== AI CHAT (versteckter Section) ========== */
+        .ai-chat { display: none; }
 
         /* ========== CHAT UI (geteilt) ========== */
         .chat-box {
@@ -553,9 +699,7 @@
             color: #fff;
         }
 
-        .chat-msg.user .msg-avatar {
-            background: #5865F2;
-        }
+        .chat-msg.user .msg-avatar { background: #5865F2; }
 
         .msg-content {
             flex: 1;
@@ -664,7 +808,7 @@
             transform: none;
         }
 
-        /* ========== FLOATING CHAT BUTTON (FAB) ========== */
+        /* ========== FLOATING CHAT BUTTON ========== */
         .chat-fab {
             position: fixed;
             bottom: 1.5rem;
@@ -698,9 +842,7 @@
             outline-offset: 3px;
         }
 
-        .chat-fab:active {
-            transform: scale(0.95);
-        }
+        .chat-fab:active { transform: scale(0.95); }
 
         .chat-fab-icon {
             font-size: 1.7rem;
@@ -725,7 +867,7 @@
             animation: pingPulse 1.5s infinite;
         }
 
-        /* ========== CHAT WIDGET OVERLAY ========== */
+        /* ========== CHAT WIDGET ========== */
         .chat-widget-overlay {
             position: fixed;
             bottom: 0;
@@ -853,6 +995,10 @@
                 justify-content: center;
                 gap: 1rem;
             }
+            .auth-container {
+                width: 100%;
+                justify-content: center;
+            }
             .hero { padding: 10rem 5% 4rem; }
             .hero h1 { font-size: 2.8rem; letter-spacing: -1px; }
             .hero p { font-size: 1rem; }
@@ -861,6 +1007,7 @@
             .stat-number { font-size: 1.8rem; }
             .footer-content { flex-direction: column; text-align: center; }
             .footer-links { justify-content: center; }
+            .user-name { max-width: 80px; }
         }
 
         @media (max-width: 480px) {
@@ -880,9 +1027,7 @@
                 right: 1rem;
             }
 
-            .chat-fab-icon {
-                font-size: 1.5rem;
-            }
+            .chat-fab-icon { font-size: 1.5rem; }
 
             .chat-widget-overlay {
                 padding: 0;
@@ -1119,6 +1264,9 @@
             <a href="terms.html">Terms</a>
             <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
         </div>
+        <div class="auth-container" id="authContainer">
+            <a href="/api/auth/login" class="auth-btn">🎮 Login with Discord</a>
+        </div>
     </nav>
 
     <section class="hero">
@@ -1195,46 +1343,25 @@
             <div class="command-category">
                 <h3>🛡️ Moderation</h3>
                 <ul class="command-list">
-                    <li>ban</li>
-                    <li>kick</li>
-                    <li>warn</li>
-                    <li>timeout</li>
-                    <li>purge</li>
-                    <li>lock</li>
-                    <li>unlock</li>
+                    <li>ban</li><li>kick</li><li>warn</li><li>timeout</li><li>purge</li><li>lock</li><li>unlock</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>📊 Leveling</h3>
                 <ul class="command-list">
-                    <li>rank</li>
-                    <li>leaderboard</li>
-                    <li>levelroles</li>
-                    <li>setlevel</li>
-                    <li>addxp</li>
+                    <li>rank</li><li>leaderboard</li><li>levelroles</li><li>setlevel</li><li>addxp</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>🎵 Music</h3>
                 <ul class="command-list">
-                    <li>play</li>
-                    <li>skip</li>
-                    <li>queue</li>
-                    <li>volume</li>
-                    <li>loop</li>
-                    <li>pause</li>
-                    <li>resume</li>
+                    <li>play</li><li>skip</li><li>queue</li><li>volume</li><li>loop</li><li>pause</li><li>resume</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>💰 Economy</h3>
                 <ul class="command-list">
-                    <li>daily</li>
-                    <li>work</li>
-                    <li>balance</li>
-                    <li>pay</li>
-                    <li>roulette</li>
-                    <li>slots</li>
+                    <li>daily</li><li>work</li><li>balance</li><li>pay</li><li>roulette</li><li>slots</li>
                 </ul>
             </div>
         </div>
@@ -1243,7 +1370,7 @@
         </div>
     </section>
 
-    <!-- ========== HIDDEN AI CHAT SECTION (für SEO, wird vom Widget genutzt) ========== -->
+    <!-- ========== HIDDEN AI CHAT SECTION ========== -->
     <section class="ai-chat" id="aiChat" aria-hidden="true">
         <div class="chat-wrapper">
             <div class="chat-box">
@@ -1379,6 +1506,108 @@
                 catch (e) {}
             }
         };
+
+        // ========== AUTH / LOGIN ==========
+        (function () {
+            var authContainer = document.getElementById('authContainer');
+            if (!authContainer) return;
+
+            var currentUser = null;
+
+            function escapeHtml(str) {
+                if (typeof str !== 'string') return '';
+                return str
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function renderLoginButton() {
+                authContainer.innerHTML =
+                    '<a href="/api/auth/login" class="auth-btn">' +
+                        '🎮 Login with Discord' +
+                    '</a>';
+            }
+
+            function renderUserMenu(user) {
+                var displayName = escapeHtml(user.displayName || user.username || 'User');
+                var avatar = escapeHtml(user.avatar || '');
+
+                authContainer.innerHTML =
+                    '<div class="user-menu" id="userMenu">' +
+                        '<button class="user-menu-trigger" type="button" id="userMenuTrigger">' +
+                            '<img class="user-avatar" src="' + avatar + '" alt="" onerror="this.style.display=\'none\'">' +
+                            '<span class="user-name">' + displayName + '</span>' +
+                        '</button>' +
+                        '<div class="user-menu-dropdown" id="userMenuDropdown">' +
+                            '<div class="user-menu-header">' +
+                                '<div class="user-menu-header-name">' + displayName + '</div>' +
+                                '<div class="user-menu-header-id">@' + escapeHtml(user.username) + '</div>' +
+                            '</div>' +
+                            '<button type="button" class="user-menu-item danger" id="logoutBtn">' +
+                                '<span>🚪</span> Logout' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>';
+
+                var trigger = document.getElementById('userMenuTrigger');
+                var dropdown = document.getElementById('userMenuDropdown');
+                var logoutBtn = document.getElementById('logoutBtn');
+
+                if (trigger && dropdown) {
+                    trigger.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('active');
+                    });
+
+                    document.addEventListener('click', function () {
+                        dropdown.classList.remove('active');
+                    });
+
+                    dropdown.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                    });
+                }
+
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function () {
+                        fetch('/api/auth/logout', { method: 'POST' })
+                            .then(function () {
+                                currentUser = null;
+                                renderLoginButton();
+                            })
+                            .catch(function () {
+                                window.location.href = '/api/auth/logout';
+                            });
+                    });
+                }
+            }
+
+            fetch('/api/auth/me', { credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data && data.loggedIn && data.user) {
+                        currentUser = data.user;
+                        renderUserMenu(currentUser);
+                    } else {
+                        renderLoginButton();
+                    }
+                })
+                .catch(function () {
+                    renderLoginButton();
+                });
+
+            if (window.location.search && window.location.search.indexOf('auth_error') !== -1) {
+                console.warn('Auth error:', window.location.search);
+                setTimeout(function () {
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState({}, '', window.location.pathname);
+                    }
+                }, 100);
+            }
+        })();
 
         // ========== SERVICE NOTICE POPUP ==========
         (function () {
@@ -1706,14 +1935,6 @@
                         fabPing.classList.add('active');
                     }
                 }, 5000);
-            }
-
-            var openChatNav = document.getElementById('openChatNav');
-            if (openChatNav) {
-                openChatNav.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    openWidget();
-                });
             }
 
             setStatus(true);
