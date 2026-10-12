@@ -1,18 +1,11 @@
 // api/auth/me.js
-// Gibt aktuelle Session zurück
-
 export default function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     const cookies = parseCookies(req.headers.cookie || '');
     const sessionCookie = cookies.session;
@@ -28,14 +21,12 @@ export default function handler(req, res) {
             return res.status(200).json({ loggedIn: false });
         }
 
-        // Avatar-URL bauen
         let avatarUrl = null;
         if (session.avatar) {
             const ext = session.avatar.startsWith('a_') ? 'gif' : 'png';
             avatarUrl = 'https://cdn.discordapp.com/avatars/' +
                         session.id + '/' + session.avatar + '.' + ext + '?size=128';
         } else {
-            // Default-Avatar
             const defaultIdx = session.discriminator === '0'
                 ? (BigInt(session.id) >> 22n) % 6n
                 : Number(session.discriminator) % 5;
@@ -54,7 +45,6 @@ export default function handler(req, res) {
         });
 
     } catch (err) {
-        console.error('Session parse error:', err && err.message);
         return res.status(200).json({ loggedIn: false });
     }
 }
@@ -64,9 +54,7 @@ function parseCookies(cookieHeader) {
     cookieHeader.split(';').forEach(function (pair) {
         const idx = pair.indexOf('=');
         if (idx > 0) {
-            const key = pair.slice(0, idx).trim();
-            const val = pair.slice(idx + 1).trim();
-            cookies[key] = decodeURIComponent(val);
+            cookies[pair.slice(0, idx).trim()] = decodeURIComponent(pair.slice(idx + 1).trim());
         }
     });
     return cookies;
