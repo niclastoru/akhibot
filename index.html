@@ -1241,7 +1241,7 @@
             border-color: var(--white);
             background: rgba(255, 255, 255, 0.03);
             transform: translateY(-2px);
-        }
+li        }
 
         @media (max-width: 480px) {
             .notice-modal { padding: 2.5rem 1.5rem 2rem; border-radius: 20px; }
@@ -1265,7 +1265,7 @@
             <a href="https://discord.com/oauth2/authorize?client_id=1488199377510989894&permissions=8&scope=bot" class="nav-btn">Add to Discord</a>
         </div>
         <div class="auth-container" id="authContainer">
-            <a href="/api/auth/login" class="auth-btn">🎮 Login with Discord</a>
+            <a href="/api/auth/login?returnTo=/dashboard.html" class="auth-btn">🎮 Login with Discord</a>
         </div>
     </nav>
 
@@ -1343,25 +1343,46 @@
             <div class="command-category">
                 <h3>🛡️ Moderation</h3>
                 <ul class="command-list">
-                    <li>ban</li><li>kick</li><li>warn</li><li>timeout</li><li>purge</li><li>lock</li><li>unlock</li>
+                    <li>ban</li>
+                    <li>kick</>
+                    <li>warn</li>
+                    <li>timeout</li>
+                    <li>purge</li>
+                    <li>lock</li>
+                    <li>unlock</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>📊 Leveling</h3>
                 <ul class="command-list">
-                    <li>rank</li><li>leaderboard</li><li>levelroles</li><li>setlevel</li><li>addxp</li>
+                    <li>rank</li>
+                    <li>leaderboard</li>
+                    <li>levelroles</li>
+                    <li>setlevel</li>
+                    <li>addxp</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>🎵 Music</h3>
                 <ul class="command-list">
-                    <li>play</li><li>skip</li><li>queue</li><li>volume</li><li>loop</li><li>pause</li><li>resume</li>
+                    <li>play</li>
+                    <li>skip</li>
+                    <li>queue</li>
+                    <li>volume</li>
+                    <li>loop</li>
+                    <li>pause</li>
+                    <li>resume</li>
                 </ul>
             </div>
             <div class="command-category">
                 <h3>💰 Economy</h3>
                 <ul class="command-list">
-                    <li>daily</li><li>work</li><li>balance</li><li>pay</li><li>roulette</li><li>slots</li>
+                    <li>daily</li>
+                    <li>work</li>
+                    <li>balance</li>
+                    <li>pay</li>
+                    <li>roulette</li>
+                    <li>slots</li>
                 </ul>
             </div>
         </div>
@@ -1526,7 +1547,7 @@
 
             function renderLoginButton() {
                 authContainer.innerHTML =
-                    '<a href="/api/auth/login" class="auth-btn">' +
+                    '<a href="/api/auth/login?returnTo=/dashboard.html" class="auth-btn">' +
                         '🎮 Login with Discord' +
                     '</a>';
             }
@@ -1546,6 +1567,8 @@
                                 '<div class="user-menu-header-name">' + displayName + '</div>' +
                                 '<div class="user-menu-header-id">@' + escapeHtml(user.username) + '</div>' +
                             '</div>' +
+                            '<a href="dashboard.html" class="user-menu-item"><span>📊</span> Dashboard</a>' +
+                            '<a href="index.html" class="user-menu-item"><span>🏠</span> Home</a>' +
                             '<button type="button" class="user-menu-item danger" id="logoutBtn">' +
                                 '<span>🚪</span> Logout' +
                             '</button>' +
