@@ -9,7 +9,6 @@ export const config = {
 export default async function handler(req, res) {
     const { code, state, error } = req.query;
 
-    // Fehler vom User (Abbrechen)
     if (error) {
         return res.redirect(302, '/?auth_error=' + encodeURIComponent(String(error)));
     }
@@ -26,7 +25,6 @@ export default async function handler(req, res) {
         return res.redirect(302, '/?auth_error=not_configured');
     }
 
-    // State aus Cookie prüfen (CSRF-Schutz)
     const cookies = parseCookies(req.headers.cookie || '');
     const stateCookie = cookies.oauth_state;
 
@@ -34,7 +32,6 @@ export default async function handler(req, res) {
         return res.redirect(302, '/?auth_error=invalid_state');
     }
 
-    // ReturnTo aus State extrahieren
     let returnTo = '/';
     try {
         const decoded = JSON.parse(Buffer.from(state, 'base64url').toString());
@@ -91,15 +88,18 @@ export default async function handler(req, res) {
         };
 
         const sessionValue = Buffer.from(JSON.stringify(sessionData)).toString('base64url');
+        const tokenValue = Buffer.from(accessToken).toString('base64url');
 
-        // Cookie setzen (30 Tage)
         const secureCookie = 'session=' + sessionValue +
             '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=' + (60 * 60 * 24 * 30);
 
-        // Alten State-Cookie löschen
+        // Access Token in eigenem Cookie (7 Tage gültig – Discord Token laufen nach 7 Tagen ab)
+        const tokenCookie = 'user_token=' + tokenValue +
+            '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=' + (60 * 60 * 24 * 7);
+
         const clearState = 'oauth_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0';
 
-        res.setHeader('Set-Cookie', [secureCookie, clearState]);
+        res.setHeader('Set-Cookie', [secureCookie, tokenCookie, clearState]);
         return res.redirect(302, returnTo);
 
     } catch (err) {
